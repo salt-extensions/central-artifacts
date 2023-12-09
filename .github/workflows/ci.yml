@@ -44,7 +44,7 @@ jobs:
 
   pre-commit:
     name: Pre-Commit
-    uses: ./.github/workflows/pre-commit-action.yml
+    uses: salt-extensions/central-artifacts/.github/workflows/pre-commit-action.yml
     needs:
       - get-changed-files
     with:
@@ -54,7 +54,7 @@ jobs:
     name: Test
     needs:
       - get-changed-files
-    uses: ./.github/workflows/test-action.yml
+    uses: salt-extensions/central-artifacts/.github/workflows/test-action.yml
     with:
       changed-files: ${{ needs.get-changed-files.outputs.changed-files }}
 
@@ -62,14 +62,14 @@ jobs:
     name: Docs
     needs:
       - get-changed-files
-    uses: ./.github/workflows/docs-action.yml
+    uses: salt-extensions/central-artifacts/.github/workflows/docs-action.yml
     with:
       changed-files: ${{ needs.get-changed-files.outputs.changed-files }}
 
 #  build-python-package:
 #    name: Python Package
 #    if: ${{ inputs.release && success() }}
-#    uses: ./.github/workflows/package-action.yml
+#    uses: salt-extensions/central-artifacts/.github/workflows/package-action.yml
 #    needs:
 #      - pre-commit
 #    with:
@@ -77,7 +77,7 @@ jobs:
 #
 #  deploy-python-package-test-pypi:
 #    name: Deploy Python Package (Test PyPI)
-#    uses: ./.github/workflows/deploy-package-action.yml
+#    uses: salt-extensions/central-artifacts/.github/workflows/deploy-package-action.yml
 #    if: ${{ inputs.release && success() }}
 #    needs:
 #      - pre-commit
@@ -91,7 +91,7 @@ jobs:
 #
 #  deploy-python-package:
 #    name: Deploy Python Package (PyPI)
-#    uses: ./.github/workflows/deploy-package-action.yml
+#    uses: salt-extensions/central-artifacts/.github/workflows/deploy-package-action.yml
 #    if: ${{ inputs.release && success() }}
 #    needs:
 #      - pre-commit
