@@ -1,0 +1,18 @@
+name: Pull Request or Push
+
+# on: [push, pull_request]
+on:
+  workflow_call:
+    inputs:
+      changed-files:
+        required: true
+        type: string
+        description: JSON string containing information about changed files
+
+jobs:
+  ci:
+    name: CI
+    uses: salt-extensions/central-artifacts/.github/workflows/ci.yml
+    permissions:
+      contents: write
+      pull-requests: read
