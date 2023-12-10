@@ -30,10 +30,6 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
-    - uses: eLco/setup-vault@v1
-      with:
-        vault_version: 1.15.4
-
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v4
       with:
@@ -61,7 +57,7 @@ jobs:
       if: always()
       id: codecov-flags
       run: |
-        echo ::set-output name=flags::$(python -c "import sys; print('{},{},salt_{}'.format('${{ runner.os }}'.replace('-latest', ''), 'py{}{}'.format(*sys.version_info), '_'.join(str(v) for v in '${{ matrix.salt-version }}'.replace('==', '_').split('.'))))")
+        echo "flags=$(python -c "import sys; print('{},{},salt_{}'.format('${{ runner.os }}'.replace('-latest', ''), 'py{}{}'.format(*sys.version_info), '_'.join(str(v) for v in '${{ matrix.salt-version }}'.replace('==', '_').split('.'))))")" >> "$GITHUB_OUTPUT"
 
     - name: Upload Project Code Coverage
       if: always()
@@ -199,7 +195,7 @@ jobs:
       if: always()
       id: codecov-flags
       run: |
-        echo ::set-output name=flags::$(python -c "import sys; print('{},{},salt_{}'.format('${{ runner.os }}'.replace('-latest', ''), 'py{}{}'.format(*sys.version_info), '_'.join(str(v) for v in '${{ matrix.salt-version }}'.replace('==', '_').split('.'))))")
+        echo "flags=$(python -c "import sys; print('{},{},salt_{}'.format('${{ runner.os }}'.replace('-latest', ''), 'py{}{}'.format(*sys.version_info), '_'.join(str(v) for v in '${{ matrix.salt-version }}'.replace('==', '_').split('.'))))")" >> "$GITHUB_OUTPUT"
 
     - name: Upload Project Code Coverage
       if: always()
@@ -322,7 +318,7 @@ jobs:
       if: always()
       id: codecov-flags
       run: |
-        echo ::set-output name=flags::$(python -c "import sys; print('{},{},salt_{}'.format('${{ runner.os }}'.replace('-latest', ''), 'py{}{}'.format(*sys.version_info), '_'.join(str(v) for v in '${{ matrix.salt-version }}'.replace('==', '_').split('.'))))")
+        echo "flags=$(python -c "import sys; print('{},{},salt_{}'.format('${{ runner.os }}'.replace('-latest', ''), 'py{}{}'.format(*sys.version_info), '_'.join(str(v) for v in '${{ matrix.salt-version }}'.replace('==', '_').split('.'))))")" >> "$GITHUB_OUTPUT"
 
     - name: Upload Project Code Coverage
       if: always()
