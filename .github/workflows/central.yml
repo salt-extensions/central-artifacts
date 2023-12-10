@@ -1,3 +1,5 @@
+on: [push, pull_request]
+
 jobs:
   call-pre-commit-action:
     uses: salt-extensions/central-artifacts/.github/workflows/pre-commit-action.yml@main
