@@ -15,7 +15,7 @@ jobs:
 
     strategy:
       fail-fast: false
-      max-parallel: 4
+      max-parallel: 5
       matrix:
         python-version:
           - '3.8'
@@ -134,7 +134,16 @@ jobs:
       if: always()
       run: |
         mkdir exitstatus
-        echo "${{ job.status }}" > exitstatus/${{ github.job }}
+        echo "${{ job.status }}" > exitstatus/${{ github.job }}-Py{{ matrix.python-version }}-Salt{{ matrix.salt-version }}
+
+    - name: Upload Exit Status
+      if: always()
+      uses: actions/upload-artifact@v3
+      with:
+        name: exitstatus
+        path: exitstatus
+        if-no-files-found: error
+
 
   Windows:
     runs-on: windows-latest
@@ -263,7 +272,7 @@ jobs:
 
     - name: Upload Logs
       if: always()
-      uses: actions/upload-artifact@main
+      uses: actions/upload-artifact@v3
       with:
         name: runtests-${{ runner.os }}-py${{ matrix.python-version }}-Salt${{ matrix.salt-version }}.log
         path: artifacts/runtests-*.log
@@ -272,7 +281,15 @@ jobs:
       if: always()
       run: |
         mkdir exitstatus
-        echo "${{ job.status }}" > exitstatus/${{ github.job }}
+        echo "${{ job.status }}" > exitstatus/${{ github.job }}-Py{{ matrix.python-version }}-Salt{{ matrix.salt-version }}
+
+    - name: Upload Exit Status
+      if: always()
+      uses: actions/upload-artifact@v3
+      with:
+        name: exitstatus
+        path: exitstatus
+        if-no-files-found: error
 
   macOS:
     runs-on: macOS-latest
@@ -395,4 +412,12 @@ jobs:
       if: always()
       run: |
         mkdir exitstatus
-        echo "${{ job.status }}" > exitstatus/${{ github.job }}
+        echo "${{ job.status }}" > exitstatus/${{ github.job }}-Py{{ matrix.python-version }}-Salt{{ matrix.salt-version }}
+
+    - name: Upload Exit Status
+      if: always()
+      uses: actions/upload-artifact@v3
+      with:
+        name: exitstatus
+        path: exitstatus
+        if-no-files-found: error
