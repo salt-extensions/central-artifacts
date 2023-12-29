@@ -27,6 +27,7 @@ jobs:
     uses: salt-extensions/central-artifacts/.github/workflows/get-changed-files.yml@main
 
   changed-files-debug:
+    name: Changed Files Debug Output
     runs-on: ubuntu-latest
     if: always()
     needs:
