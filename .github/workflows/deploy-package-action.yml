@@ -27,6 +27,16 @@ jobs:
           name: salt-extension-${{ inputs.version }}-packages
           path: dist
 
+      - name: Create GitHub Release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release create "$GITHUB_REF_NAME" \
+              --repo="$GITHUB_REPOSITORY" \
+              --title="${GITHUB_REPOSITORY#*/} ${{ inputs.version }}" \
+              --generate-notes \
+              dist/*
+
       - name: Publish distribution to Test PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
         if: ${{ inputs.test }}
