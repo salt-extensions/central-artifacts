@@ -3,6 +3,10 @@ name: CI
 on:
   workflow_call:
     inputs:
+      setup-vault:
+        required: false
+        type: boolean
+        default: false
       release:
         required: false
         type: boolean
@@ -37,6 +41,7 @@ jobs:
     uses: salt-extensions/central-artifacts/.github/workflows/test-action.yml@main
     with:
       changed-files: ${{ needs.get-changed-files.outputs.changed-files }}
+      setup-vault: ${{ inputs.setup-vault }}
 
   docs:
     name: Docs

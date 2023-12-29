@@ -7,6 +7,10 @@ on:
         required: true
         type: string
         description: JSON string containing information about changed files
+      setup-vault:
+        required: false
+        type: boolean
+        default: false
 
 jobs:
   Linux:
@@ -29,6 +33,12 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
+
+    - name: Setup Vault
+      if: ${{ inputs.setup-vault }}
+      uses: eLco/setup-vault@v1.0.2
+      with:
+        vault_version: 1.15.4
 
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v4
