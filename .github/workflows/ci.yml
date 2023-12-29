@@ -64,8 +64,7 @@ jobs:
       - test
       - docs
       - build-python-package
-    secrets:
-      TEST_PYPI_API_TOKEN: "${{ secrets.TEST_PYPI_API_TOKEN }}"
+    secrets: inherit
     with:
       version: "${{ inputs.version }}"
 
@@ -79,8 +78,7 @@ jobs:
       - docs
       - build-python-package
       - deploy-python-package-test-pypi
-    secrets:
-      PYPI_API_TOKEN: "${{ secrets.PYPI_API_TOKEN }}"
+    secrets: inherit
     with:
       test: false
       version: "${{ inputs.version }}"
