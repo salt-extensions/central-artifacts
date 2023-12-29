@@ -1,18 +1,20 @@
 name: Pull Request or Push
 
-# on: [push, pull_request]
 on:
-  workflow_call:
-    inputs:
-      changed-files:
-        required: true
-        type: string
-        description: JSON string containing information about changed files
+  push:
+    branches:
+      - 'main'  # Run on pushes to main even though we shouldn't do this
+    tags-ignore:
+      - '*'   # Ignore pushes to tags
+  pull_request:
 
 jobs:
-  ci:
-    name: CI
-    uses: salt-extensions/central-artifacts/.github/workflows/ci.yml@main
-    permissions:
-      contents: write
-      pull-requests: read
+  call-get-changed-files:
+    uses: salt-extensions/central-artifacts/.github/workflows/get-changed-files.yml@main
+
+  call-pre-commit-action:
+    uses: salt-extensions/central-artifacts/.github/workflows/pre-commit-action.yml@main
+    needs:
+      - call-get-changed-files
+    with:
+      changed-files: ${{ needs.call-get-changed-files.outputs.changed-files }}
