@@ -27,6 +27,10 @@ jobs:
     uses: salt-extensions/central-artifacts/.github/workflows/get-changed-files.yml@main
 
   changed-files-debug:
+    runs-on: ubuntu-latest
+    if: always()
+    needs:
+      - get-changed-files
     steps:
       - name: Echo Changed Files Output
         run: echo "${{ toJSON(needs.get-changed-files.outputs.changed-files) }}"
