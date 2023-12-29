@@ -47,19 +47,16 @@ jobs:
   test:
     name: Test
     needs:
-      - get-changed-files
+      - pre-commit
     uses: salt-extensions/central-artifacts/.github/workflows/test-action.yml@main
     with:
-      changed-files: ${{ needs.get-changed-files.outputs.changed-files }}
       setup-vault: ${{ inputs.setup-vault }}
 
   docs:
     name: Docs
     needs:
-      - get-changed-files
+      - pre-commit
     uses: salt-extensions/central-artifacts/.github/workflows/docs-action.yml@main
-    with:
-      changed-files: ${{ needs.get-changed-files.outputs.changed-files }}
 
   build-python-package:
     name: Python Package
@@ -75,7 +72,6 @@ jobs:
     uses: salt-extensions/central-artifacts/.github/workflows/deploy-package-action.yml@main
     if: ${{ inputs.release && success() }}
     needs:
-      - pre-commit
       - test
       - docs
       - build-python-package
@@ -88,10 +84,6 @@ jobs:
     uses: salt-extensions/central-artifacts/.github/workflows/deploy-package-action.yml@main
     if: ${{ inputs.release && success() }}
     needs:
-      - pre-commit
-      - test
-      - docs
-      - build-python-package
       - deploy-python-package-test-pypi
     secrets: inherit
     with:
@@ -105,7 +97,6 @@ jobs:
     runs-on: ubuntu-latest
     if: always()
     needs:
-      - pre-commit
       - test
       - docs
       - build-python-package

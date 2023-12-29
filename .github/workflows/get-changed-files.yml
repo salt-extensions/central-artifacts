@@ -22,7 +22,7 @@ jobs:
         uses: dorny/paths-filter@v2
         with:
           token: ${{ github.token }}
-          list-files: json
+          list-files: escape
           filters: |
             repo:
               - added|modified:

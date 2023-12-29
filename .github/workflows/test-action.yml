@@ -3,10 +3,6 @@ name: Testing
 on:
   workflow_call:
     inputs:
-      changed-files:
-        required: true
-        type: string
-        description: JSON string containing information about changed files
       setup-vault:
         required: false
         type: boolean

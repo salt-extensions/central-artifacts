@@ -41,7 +41,7 @@ jobs:
       - name: Check Changed Files On PR
         if: github.event_name == 'pull_request' && fromJSON(inputs.changed-files)['repo'] == 'true'
         run: |
-          pre-commit run --show-diff-on-failure --color=always --files ${{ join(fromJSON(inputs.changed-files)['repo_files'], ' ') }}
+          pre-commit run --show-diff-on-failure --color=always --files ${{ fromJSON(inputs.changed-files)['repo_files'] }}
 
       - name: Set Exit Status
         if: always()
