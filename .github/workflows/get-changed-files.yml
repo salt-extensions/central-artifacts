@@ -13,7 +13,7 @@ jobs:
       contents: read  # for dorny/paths-filter to fetch a list of changed files
       pull-requests: read  # for dorny/paths-filter to read pull requests
     outputs:
-      changed-files: ${{ steps.changed-files.outputs }}
+      changed-files: ${{ toJSON(steps.changed-files.outputs) }}
     steps:
       - uses: actions/checkout@v4
 
@@ -32,4 +32,4 @@ jobs:
                 - '**'
 
       - name: Echo Changed Files Output
-        run: echo "${{ steps.changed-files.outputs }}"
+        run: echo "${{ toJSON(steps.changed-files.outputs) }}"
