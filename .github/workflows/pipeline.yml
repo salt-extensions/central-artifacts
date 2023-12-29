@@ -11,4 +11,4 @@ jobs:
     needs:
       - call-get-changed-files
     with:
-      changed-files: ${{ call-get-changed-files.outputs.changed-files }}
+      changed-files: ${{ needs.call-get-changed-files.outputs.changed-files }}
