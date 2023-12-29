@@ -12,6 +12,7 @@ jobs:
       changed-files: ${{ toJSON(steps.changed-files.outputs) }}
     steps:
       - uses: actions/checkout@v4
+
       - name: Get Changed Files
         id: changed-files
         uses: dorny/paths-filter@v2
@@ -25,3 +26,9 @@ jobs:
             deleted:
               - deleted:
                 - '**'
+
+      - name: Echo GitHub Ref
+        run: echo "${{ github.ref }}  ${{ github.ref_name }}"
+
+      - name: Echo Changed Files Output
+        run: echo "${{ toJSON(steps.changed-files.outputs) }}"
