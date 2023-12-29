@@ -1,5 +1,9 @@
 on:
-  workflow_call
+  workflow_call:
+    outputs:
+      changed-files:
+        description: "Changed file JSON output from dorny/paths-filter"
+        value: ${{ jobs.get-changed-files.outputs.changed-files }}
 
 jobs:
   get-changed-files:
@@ -26,9 +30,6 @@ jobs:
             deleted:
               - deleted:
                 - '**'
-
-      - name: Echo GitHub Ref
-        run: echo "${{ github.ref }}  ${{ github.ref_name }}"
 
       - name: Echo Changed Files Output
         run: echo "${{ toJSON(steps.changed-files.outputs) }}"
