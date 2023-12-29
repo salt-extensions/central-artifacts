@@ -14,7 +14,7 @@ jobs:
       - uses: actions/checkout@v4
       - name: Get Changed Files
         id: changed-files
-        uses: dorny/paths-filter@v1
+        uses: dorny/paths-filter@v2
         with:
           token: ${{ github.token }}
           list-files: json
