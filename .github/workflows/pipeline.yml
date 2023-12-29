@@ -1,5 +1,7 @@
 on: [push, pull_request]
 
+# hello
+
 jobs:
   call-get-changed-files:
     uses: salt-extensions/central-artifacts/.github/workflows/get-changed-files.yml@main
