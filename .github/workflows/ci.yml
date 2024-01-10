@@ -36,21 +36,35 @@ jobs:
       - name: Echo Changed Files Output
         run: echo "${{ toJSON(needs.get-changed-files.outputs.changed-files) }}"
 
+  #azure-login:
+   # name: Azure Login
+    #runs-on: ubuntu-latest
+    #steps:
+     # - name: Set up Azure credentials
+      #  run: |
+       #   echo "Logging into Azure..."
+        #  az login --service-principal -u ${{ secrets.AZURE_CLIENT_ID }} -p ${{ secrets.AZURE_CLIENT_SECRET }} --tenant ${{ secrets.AZURE_TENANT_ID }}
+         # az account set --subscription ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+        #env:
+         # AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+          #AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+          #AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          #AZURE_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
   azure-login:
-    name: Azure Login
     runs-on: ubuntu-latest
     steps:
-      - name: Set up Azure credentials
-        run: |
-          echo "Logging into Azure..."
-          az login --service-principal -u ${{ secrets.AZURE_CLIENT_ID }} -p ${{ secrets.AZURE_CLIENT_SECRET }} --tenant ${{ secrets.AZURE_TENANT_ID }}
-          az account set --subscription ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-        env:
-          AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
-          AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
-          AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-          AZURE_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
-
+    - name: 'Az CLI login'
+      uses: azure/login@v1
+      with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+  
+    - name: 'Run Azure CLI commands'
+      run: |
+          az account show
+          az group list
+          pwd 
   pre-commit:
     name: Pre-Commit
     uses: salt-extensions/central-artifacts/.github/workflows/pre-commit-action.yml@main
