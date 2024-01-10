@@ -14,14 +14,15 @@ on:
       version:
         required: false
         type: string
+    permissions:
+      id-token: write
+      contents: read
     secrets:
       PYPI_API_TOKEN:
         required: false
       TEST_PYPI_API_TOKEN:
         required: false
-permissions:
-      id-token: write
-      contents: read
+
 
 jobs:
   get-changed-files:
