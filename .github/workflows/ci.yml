@@ -14,9 +14,6 @@ on:
       version:
         required: false
         type: string
-    permissions:
-      id-token: write
-      contents: read
     secrets:
       PYPI_API_TOKEN:
         required: false
@@ -55,6 +52,9 @@ jobs:
           #AZURE_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
   azure-login:
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
     steps:
     - name: 'Az CLI login'
       uses: azure/login@v1
