@@ -58,11 +58,12 @@ jobs:
       with:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-    - name: 'Run Azure CLI commands'
-      run: |
+    - name: Azure CLI script
+      uses: azure/CLI@v1
+      with:
+        azcliversion: latest
+        inlineScript: |
           az account show
-          az group list
-          pwd 
   pre-commit:
     name: Pre-Commit
     uses: salt-extensions/central-artifacts/.github/workflows/pre-commit-action.yml@main
