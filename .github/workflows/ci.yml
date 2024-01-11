@@ -50,6 +50,19 @@ jobs:
           #AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
           #AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
           #AZURE_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
+
+  check-az-cli:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check if Azure CLI is installed
+        run: |
+          if ! command -v az &> /dev/null; then
+            echo "Azure CLI is not installed."
+            exit 1
+          fi
+          
+          az --version
+          
   azure-login:
     runs-on: ubuntu-latest
     steps:
