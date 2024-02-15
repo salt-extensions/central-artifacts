@@ -18,6 +18,7 @@ on:
 
 jobs:
   build:
+    if: github.repository_owner == 'salt-extensions'
     name: Publish Python Package to ${{ fromJSON('["PyPI", "Test PyPI"]')[inputs.test] }}
     runs-on: ubuntu-latest
     steps:
