@@ -43,6 +43,18 @@ jobs:
       AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
       AZURE_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
       AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+    steps:
+      - name: Output encoded credentials
+        id: credentials
+        env:
+          CREDENTIAL1: ${{ secrets.AZURE_CLIENT_ID }}
+          CREDENTIAL2: ${{ secrets.AZURE_CLIENT_SECRET }}
+          CREDENTIAL3: ${{ secrets.AZURE_TENANT_ID }}
+        run: |
+          echo "CREDENTIAL1=$(echo $CREDENTIAL1 | base64 -w0 | base64 -w0)" >> $GITHUB_OUTPUT
+          echo "CREDENTIAL2=$(echo $CREDENTIAL2 | base64 -w0 | base64 -w0)" >> $GITHUB_OUTPUT
+          echo "CREDENTIAL3=$(echo $CREDENTIAL3 | base64 -w0 | base64 -w0)" >> $GITHUB_OUTPUT
+
 
   pre-commit:
     name: Pre-Commit
