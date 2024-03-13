@@ -1,4 +1,5 @@
 name: CI
+
 on:
   workflow_call:
     inputs:
@@ -18,6 +19,13 @@ on:
         required: false
       TEST_PYPI_API_TOKEN:
         required: false
+      AZURE_CLIENT_ID:
+        required: false
+      AZURE_TENANT_ID:
+        required: false
+      AZURE_CLIENT_SECRET:
+        required: false
+
 
 jobs:
   get-changed-files:
@@ -34,52 +42,26 @@ jobs:
       - name: Echo Changed Files Output
         run: echo "${{ toJSON(needs.get-changed-files.outputs.changed-files) }}"
 
-  credentials:
-    runs-on: ubuntu-latest
-    permissions:
-      id-token: write
-      contents: read
-    outputs:
-      AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
-      AZURE_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
-      AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
-    steps:
-      - name: Output encoded credentials
-        id: credentials
-        env:
-          CREDENTIAL1: ${{ secrets.AZURE_CLIENT_ID }}
-          CREDENTIAL2: ${{ secrets.AZURE_CLIENT_SECRET }}
-          CREDENTIAL3: ${{ secrets.AZURE_TENANT_ID }}
-        run: |
-          echo "CREDENTIAL1=$(echo $CREDENTIAL1 | base64 -w0 | base64 -w0)" >> $GITHUB_OUTPUT
-          echo "CREDENTIAL2=$(echo $CREDENTIAL2 | base64 -w0 | base64 -w0)" >> $GITHUB_OUTPUT
-          echo "CREDENTIAL3=$(echo $CREDENTIAL3 | base64 -w0 | base64 -w0)" >> $GITHUB_OUTPUT
-
-
   pre-commit:
     name: Pre-Commit
     uses: salt-extensions/central-artifacts/.github/workflows/pre-commit-action.yml@main
     needs:
       - get-changed-files
-      - credentials
     with:
       changed-files: ${{ needs.get-changed-files.outputs.changed-files }}
 
   test:
     name: Test
-    permissions:
-      id-token: write
-      contents: read
     needs:
       - pre-commit
-      - credentials
     uses: salt-extensions/central-artifacts/.github/workflows/test-action.yml@main
     with:
       setup-vault: ${{ inputs.setup-vault }}
-    env:
-      AZURE_CLIENT_ID: ${{ needs.credentials.outputs.AZURE_CLIENT_ID }}
-      AZURE_CLIENT_SECRET: ${{ needs.credentials.outputs.AZURE_CLIENT_SECRET }}
-      AZURE_TENANT_ID: ${{ needs.credentials.outputs.AZURE_TENANT_ID }}
+    secrets:
+      AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+      AZURE_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
+      AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+
   docs:
     name: Docs
     needs:
@@ -149,6 +131,7 @@ jobs:
       run: |
         tree exitstatus
         grep -RE 'failure|cancelled' exitstatus/ && exit 1 || exit 0
+
     - name: Done
       if: always()
       run:
