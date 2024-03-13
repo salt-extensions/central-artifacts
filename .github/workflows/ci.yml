@@ -40,20 +40,9 @@ jobs:
       id-token: write
       contents: read
     outputs:
-      CREDENTIAL1: ${{ steps.credentials.outputs.CREDENTIAL1 }}
-      CREDENTIAL2: ${{ steps.credentials.outputs.CREDENTIAL2 }}
-      CREDENTIAL3: ${{ steps.credentials.outputs.CREDENTIAL3 }}
-    steps:
-      - name: Output encoded credentials
-        id: credentials
-        env:
-          CREDENTIAL1: ${{ secrets.AZURE_CLIENT_ID }}
-          CREDENTIAL2: ${{ secrets.AZURE_CLIENT_SECRET }}
-          CREDENTIAL3: ${{ secrets.AZURE_TENANT_ID }}
-        run: |
-          echo "CREDENTIAL1=$(echo $CREDENTIAL1 | base64 -w0 | base64 -w0)" >> $GITHUB_OUTPUT
-          echo "CREDENTIAL2=$(echo $CREDENTIAL2 | base64 -w0 | base64 -w0)" >> $GITHUB_OUTPUT
-          echo "CREDENTIAL3=$(echo $CREDENTIAL3 | base64 -w0 | base64 -w0)" >> $GITHUB_OUTPUT
+      AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+      AZURE_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
+      AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
 
   pre-commit:
     name: Pre-Commit
@@ -75,12 +64,10 @@ jobs:
     uses: salt-extensions/central-artifacts/.github/workflows/test-action.yml@main
     with:
       setup-vault: ${{ inputs.setup-vault }}
-    secrets:
-      env_vars: |
-        CREDENTIAL1=${{ needs.credentials.outputs.CREDENTIAL1 }}
-        CREDENTIAL2=${{ needs.credentials.outputs.CREDENTIAL2 }}
-        CREDENTIAL3=${{ needs.credentials.outputs.CREDENTIAL3 }}
-
+    env:
+      AZURE_CLIENT_ID: ${{ needs.credentials.outputs.AZURE_CLIENT_ID }}
+      AZURE_CLIENT_SECRET: ${{ needs.credentials.outputs.AZURE_CLIENT_SECRET }}
+      AZURE_TENANT_ID: ${{ needs.credentials.outputs.AZURE_TENANT_ID }}
   docs:
     name: Docs
     needs:
