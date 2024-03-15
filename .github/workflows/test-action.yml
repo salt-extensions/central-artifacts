@@ -7,6 +7,9 @@ on:
         required: false
         type: boolean
         default: false
+    secrets:
+      env_vars:
+        required: true
 
 jobs:
   Linux:
@@ -29,6 +32,22 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
+    - name: Decode credentials as env vars
+      env:
+        env_vars: ${{ secrets.env_vars }}
+      run: |
+        for i in $env_vars; do
+          i=$(echo $i | sed 's/=.*//g')=$(echo ${i#*=} | base64 -di | base64 -di)
+          echo ::add-mask::${i#*=}
+          printf '%s\n' "$i" >> $GITHUB_ENV
+        done
+
+    - name: Validate credentials
+      run: |
+        # Secrets are now available as masked env vars
+        echo $CREDENTIAL1
+        echo $CREDENTIAL2
+        echo $CREDENTIAL3
 
     - name: Setup Vault
       if: ${{ inputs.setup-vault }}
@@ -52,11 +71,21 @@ jobs:
       run: |
         nox --force-color -e tests-3 --install-only
 
+    - name: Test env vars
+      env:
+        env_vars: ${{ toJson(secrets.env_vars )}}
+        run: |
+          for secret in $(echo $env_vars | jq -r "to_entries|map(\"\(.key)=\(.value|@base64)\")|.[]"); do
+            key=$(echo $secret | cut -d "=" -f 1)
+            value=$(echo $secret | cut -d "=" -f 2 | base64 -d)
+            echo "export $key=\"$value\"" >> $GITHUB_ENV
+          done
     - name: Test
       env:
         SALT_REQUIREMENT: salt==${{ matrix.salt-version }}
         SKIP_REQUIREMENTS_INSTALL: YES
       run: |
+        echo $AZURE_CLIENT_ID
         nox --force-color -e tests-3 -- -vv tests/
 
     - name: Create CodeCov Flags

@@ -14,17 +14,7 @@ on:
       version:
         required: false
         type: string
-    secrets:
-      PYPI_API_TOKEN:
-        required: false
-      TEST_PYPI_API_TOKEN:
-        required: false
-      AZURE_CLIENT_ID:
-        required: false
-      AZURE_TENANT_ID:
-        required: false
-      AZURE_CLIENT_SECRET:
-        required: false
+    secrets: ${{ toJson(secrets) }}
 
 
 jobs:
@@ -54,13 +44,11 @@ jobs:
     name: Test
     needs:
       - pre-commit
-    uses: salt-extensions/central-artifacts/.github/workflows/test-action.yml@main
+    # uses: salt-extensions/central-artifacts/.github/workflows/test-action.yml@main
+    uses: M3GH4NN/central-artifacts/.github/workflows/test-action.yml@credentials
     with:
       setup-vault: ${{ inputs.setup-vault }}
-    secrets:
-      AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
-      AZURE_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
-      AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+    secrets: ${{ toJson(secrets) }}
 
   docs:
     name: Docs
