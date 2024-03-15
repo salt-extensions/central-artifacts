@@ -7,6 +7,9 @@ on:
         required: false
         type: boolean
         default: false
+      env_vars:
+        required: false
+        type: boolean
 
 jobs:
   Linux:
@@ -31,11 +34,10 @@ jobs:
     - uses: actions/checkout@v4
     - name: Decode credentials as env vars
       env:
-        env_vars: ${{ secrets.env_vars }}
+        env_vars: ${{ inputs.env_vars }}
       run: |
         if [ -z "$env_vars" ]; then
           echo "No environment variables found"
-          exit 1
         fi
         for secret in $(echo $env_vars | jq -r "to_entries|map(\"\(.key)=\(.value|@base64)\")|.[]"); do
           key=$(echo $secret | cut -d "=" -f 1)
@@ -71,7 +73,7 @@ jobs:
 
     - name: Test env vars
       env:
-        env_vars: ${{ toJson(secrets.env_vars )}}
+        env_vars: ${{ toJSON(secrets.env_vars )}}
       run: |
         for secret in $(echo $env_vars | jq -r "to_entries|map(\"\(.key)=\(.value|@base64)\")|.[]"); do
           key=$(echo $secret | cut -d "=" -f 1)
