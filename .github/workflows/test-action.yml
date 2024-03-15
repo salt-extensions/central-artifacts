@@ -7,9 +7,9 @@ on:
         required: false
         type: boolean
         default: false
+    secrets:
       env_vars:
-        required: false
-        type: string
+        required: true
 
 jobs:
   Linux:
@@ -33,11 +33,13 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: Decode credentials as env vars
-      if: ${{ inputs.env_vars }}
+      env:
+        env_vars: ${{ secrets.env_vars }}
       run: |
-        for i in "${{ inputs.env_vars }}"
-        do
-          printf "%s\n" $i >> $GITHUB_ENV
+        for i in $env_vars; do
+          i=$(echo $i | sed 's/=.*//g')=$(echo ${i#*=} | base64 -di | base64 -di)
+          echo ::add-mask::${i#*=}
+          printf '%s\n' "$i" >> $GITHUB_ENV
         done
 
     - name: Validate credentials
@@ -77,6 +79,7 @@ jobs:
     #     done
     - name: Test
       env:
+        env_vars: ${{ secrets.env_vars }}
         SALT_REQUIREMENT: salt==${{ matrix.salt-version }}
         SKIP_REQUIREMENTS_INSTALL: YES
       run: |
