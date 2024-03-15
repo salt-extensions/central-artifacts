@@ -33,10 +33,14 @@ jobs:
       env:
         env_vars: ${{ secrets.env_vars }}
       run: |
-        for i in $env_vars; do
-          i=$(echo $i | sed 's/=.*//g')=$(echo ${i#*=} | base64 -di | base64 -di)
-          echo ::add-mask::${i#*=}
-          printf '%s\n' "$i" >> $GITHUB_ENV
+        if [ -z "$env_vars" ]; then
+          echo "No environment variables found"
+          exit 1
+        fi
+        for secret in $(echo $env_vars | jq -r "to_entries|map(\"\(.key)=\(.value|@base64)\")|.[]"); do
+          key=$(echo $secret | cut -d "=" -f 1)
+          value=$(echo $secret | cut -d "=" -f 2 | base64 -d)
+          echo "export $key=\"$value\"" >> $GITHUB_ENV
         done
 
     - name: Validate credentials
