@@ -14,7 +14,9 @@ on:
       version:
         required: false
         type: string
-    secrets: ${{ toJson(secrets) }}
+    secrets:
+      env_vars:
+        required: false
 
 
 jobs:
