@@ -51,6 +51,8 @@ jobs:
     uses: M3GH4NN/central-artifacts/.github/workflows/test-action.yml@credentials
     with:
       setup-vault: ${{ inputs.setup-vault }}
+    secrets:
+      env_vars: ${{ secrets.env_vars}}
 
   docs:
     name: Docs
