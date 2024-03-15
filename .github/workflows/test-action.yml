@@ -42,7 +42,7 @@ jobs:
         for secret in $(echo $env_vars | jq -r "to_entries|map(\"\(.key)=\(.value|@base64)\")|.[]"); do
           key=$(echo $secret | cut -d "=" -f 1)
           value=$(echo $secret | cut -d "=" -f 2 | base64 -d)
-          echo "export $key=\"$value\"" >> $GITHUB_ENV
+          echo "export $key=\"$value\"" >> $GITHUB_OUTPUT
         done
 
     - name: Validate credentials
@@ -78,7 +78,7 @@ jobs:
         for secret in $(echo $env_vars | jq -r "to_entries|map(\"\(.key)=\(.value|@base64)\")|.[]"); do
           key=$(echo $secret | cut -d "=" -f 1)
           value=$(echo $secret | cut -d "=" -f 2 | base64 -d)
-          echo "export $key=\"$value\"" >> $GITHUB_ENV
+          echo "export $key=\"$value\"" >> $GITHUB_OUTPUT
         done
     - name: Test
       env:
