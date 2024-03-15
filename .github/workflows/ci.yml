@@ -51,7 +51,7 @@ jobs:
     uses: M3GH4NN/central-artifacts/.github/workflows/test-action.yml@credentials
     with:
       setup-vault: ${{ inputs.setup-vault }}
-      env_vars: ${{ inputs.env_vars }}
+      env_vars: ${{ needs.test-action.outputs.env_vars }}
     secrets: inherit
 
   docs:
