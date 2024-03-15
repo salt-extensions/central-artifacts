@@ -41,10 +41,7 @@ jobs:
 
     - name: Validate credentials
       run: |
-        # Secrets are now available as masked env vars
-        echo $CREDENTIAL1
-        echo $CREDENTIAL2
-        echo $CREDENTIAL3
+        echo $AZURE_CLIENT_ID
 
     - name: Setup Vault
       if: ${{ inputs.setup-vault }}
