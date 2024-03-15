@@ -7,9 +7,6 @@ on:
         required: false
         type: boolean
         default: false
-    secrets:
-      env_vars:
-        required: true
 
 jobs:
   Linux:
