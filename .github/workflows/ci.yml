@@ -14,9 +14,9 @@ on:
       version:
         required: false
         type: string
+    secrets:
       env_vars:
-        required: false
-        type: boolean
+        required: true
 
 
 
