@@ -76,8 +76,8 @@ jobs:
       run: |
         IFS=',' read -ra secrets_array <<< "$secret_env_vars"
         for secret in "${secrets_array[@]}"; do
-          key=$(echo "$secret" | cut -d "=" -f 1)
-          value=$(echo "$secret" | cut -d "=" -f 2-)
+          key=$(echo "$secret" | cut -d ":" -f 1 | tr -d '[:space:]' | tr -d '"')
+          value=$(echo "$secret" | cut -d ":" -f 2- | tr -d '[:space:]' | tr -d '"')
           echo "export $key=\"$value\"" >> $GITHUB_OUTPUT
         done
     - name: Test
