@@ -10,9 +10,6 @@ on:
       env_vars:
         required: false
         type: string
-    secrets:
-      secret_env_vars:
-        required: false
 
 jobs:
   Linux:
@@ -38,7 +35,12 @@ jobs:
     - name: Decode credentials as env vars
       env:
         env_vars: ${{ inputs.env_vars }}
-        secret_env_vars: ${{ secrets.secret_env_vars }}
+        secret_env_vars: |
+            {
+              "AZURE_CLIENT_ID": "${{ secrets.AZURE_CLIENT_ID }}",
+              "AZURE_CLIENT_SECRET": "${{ secrets.AZURE_CLIENT_SECRET }}",
+              "AZURE_TENANT_ID": "${{ secrets.AZURE_TENANT_ID }}"
+            }
       run: |
         echo "$env_vars"
         echo "$secret_env_vars"
@@ -47,7 +49,12 @@ jobs:
       id: env
       env:
         env_vars: ${{ inputs.env_vars }}
-        secret_env_vars: ${{ secrets.secret_env_vars }}
+        secret_env_vars: |
+            {
+              "AZURE_CLIENT_ID": "${{ secrets.AZURE_CLIENT_ID }}",
+              "AZURE_CLIENT_SECRET": "${{ secrets.AZURE_CLIENT_SECRET }}",
+              "AZURE_TENANT_ID": "${{ secrets.AZURE_TENANT_ID }}"
+            }
       run: |
         IFS=',' read -ra secrets_array <<< "$secret_env_vars"
         for secret in "${secrets_array[@]}"; do
@@ -81,7 +88,12 @@ jobs:
     - name: Test
       env:
         env_vars: ${{ inputs.env_vars }}
-        secret_env_vars: ${{ secrets.secret_env_vars }}
+        secret_env_vars: |
+            {
+              "AZURE_CLIENT_ID": "${{ secrets.AZURE_CLIENT_ID }}",
+              "AZURE_CLIENT_SECRET": "${{ secrets.AZURE_CLIENT_SECRET }}",
+              "AZURE_TENANT_ID": "${{ secrets.AZURE_TENANT_ID }}"
+            }
         SALT_REQUIREMENT: salt==${{ matrix.salt-version }}
         SKIP_REQUIREMENTS_INSTALL: YES
       run: |
