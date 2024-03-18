@@ -40,7 +40,7 @@ jobs:
         env_vars: ${{ inputs.env_vars }}
         secret_env_vars: ${{ secrets.secret_env_vars }}
       run: |
-        echo "${{ toJSON(inputs.env_vars) }}
+        echo "${{ toJSON(inputs.env_vars) }}"
         echo $secret_env_vars
 
     - name: Validate credentials
