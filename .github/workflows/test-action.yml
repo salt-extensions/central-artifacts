@@ -44,7 +44,7 @@ jobs:
 
     - name: Test env vars
       run: |
-       echo $env_vars
+       echo $AZURE_CLIENT_ID
 
     - name: Setup Vault
       if: ${{ inputs.setup-vault }}
