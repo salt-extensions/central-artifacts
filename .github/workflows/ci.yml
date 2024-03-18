@@ -17,6 +17,9 @@ on:
       env_vars:
         required: false
         type: string
+      AZURE_CLIENT_ID:
+        required: false
+        type: string
 
 
 
