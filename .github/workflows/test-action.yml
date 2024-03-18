@@ -10,6 +10,9 @@ on:
       env_vars:
         required: false
         type: string
+    secrets:
+      secret_env_vars:
+        required: false
 
 jobs:
   Linux:
@@ -35,8 +38,10 @@ jobs:
     - name: Decode credentials as env vars
       env:
         env_vars: ${{ inputs.env_vars }}
+        secret_env_vars: ${{ secrets.secret_env_vars }}
       run: |
         echo $env_vars
+        echo $secret_env_vars
 
     - name: Validate credentials
       run: |
@@ -64,22 +69,24 @@ jobs:
       run: |
         nox --force-color -e tests-3 --install-only
 
-    # - name: Test env vars
-    #   env:
-    #     env_vars: ${{ secrets.env_vars }}
-    #   run: |
-    #     for secret in $(echo $env_vars | jq -r "to_entries|map(\"\(.key)=\(.value|@base64)\")|.[]"); do
-    #       key=$(echo $secret | cut -d "=" -f 1)
-    #       value=$(echo $secret | cut -d "=" -f 2 | base64 -d)
-    #       echo "export $key=\"$value\"" >> $GITHUB_OUTPUT
-    #     done
+    - name: Test env vars
+      env:
+        env_vars: ${{ secrets.env_vars }}
+      run: |
+        for secret in $(echo $env_vars | jq -r "to_entries|map(\"\(.key)=\(.value|@base64)\")|.[]"); do
+          key=$(echo $secret | cut -d "=" -f 1)
+          value=$(echo $secret | cut -d "=" -f 2 | base64 -d)
+          echo "export $key=\"$value\"" >> $GITHUB_OUTPUT
+        done
     - name: Test
       env:
         env_vars: ${{ inputs.env_vars }}
+        secret_env_vars: ${{ secrets.secret_env_vars }}
         SALT_REQUIREMENT: salt==${{ matrix.salt-version }}
         SKIP_REQUIREMENTS_INSTALL: YES
       run: |
         echo $env_vars
+        echo $secret_env_vars
         nox --force-color -e tests-3 -- -vv tests/
 
     - name: Create CodeCov Flags

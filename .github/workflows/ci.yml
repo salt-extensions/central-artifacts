@@ -20,6 +20,9 @@ on:
       AZURE_CLIENT_ID:
         required: false
         type: string
+    secrets:
+      secret_env_vars:
+        required: false
 
 
 
