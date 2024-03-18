@@ -71,7 +71,8 @@ jobs:
 
     - name: Test env vars
       env:
-        env_vars: ${{ secrets.env_vars }}
+        env_vars: ${{ inputs.env_vars }}
+        secret_env_vars: ${{ secrets.secret_env_vars }}
       run: |
         for secret in $(echo $env_vars | jq -r "to_entries|map(\"\(.key)=\(.value|@base64)\")|.[]"); do
           key=$(echo $secret | cut -d "=" -f 1)
