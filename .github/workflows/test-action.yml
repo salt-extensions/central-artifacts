@@ -37,11 +37,7 @@ jobs:
       env:
         ENV_VARS: "${{ secrets.ENV_VARS }}"
       run: |
-        echo "$ENV_VARS" | base64 -d >> decoded_env_vars.txt
-        while read -r line; do
-          echo "$line" >> $GITHUB_ENV
-        done < decoded_env_vars.txt
-
+        echo "$ENV_VARS" | base64 -d >> $GITHUB_ENV
 
 
     - name: Setup Vault
@@ -68,11 +64,9 @@ jobs:
 
     - name: Test
       env:
-        ENV_VARS: ${{ env.ENV_VARS }}
         SALT_REQUIREMENT: salt==${{ matrix.salt-version }}
         SKIP_REQUIREMENTS_INSTALL: YES
       run: |
-        echo "${{env.ENV_VARS}}"
         nox --force-color -e tests-3 -- -vv tests/
 
     - name: Create CodeCov Flags
