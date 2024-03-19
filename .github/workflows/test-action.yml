@@ -37,9 +37,7 @@ jobs:
       env:
         ENV_VARS: "${{ secrets.ENV_VARS }}"
       run: |
-        echo "$ENV_VARS" | base64 -d
-        echo "AZURE_CLIENT_ID=::add-mask::$AZURE_CLIENT_ID" >> $GITHUB_ENV
-        echo "AZURE_TENANT_ID=::add-mask::$AZURE_TENANT_ID" >> $GITHUB_ENV
+        echo "$ENV_VARS" | base64 -d >> $GITHUB_ENV
 
 
     - name: Setup Vault
