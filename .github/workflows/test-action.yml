@@ -7,6 +7,9 @@ on:
         required: false
         type: boolean
         default: false
+      ENV_VARS:
+        required: false
+        type: string
     secrets:
       env_vars:
         required: false
@@ -32,19 +35,19 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
-    - name: Decode credentials as env vars
-      env:
-        env_vars: ${{ secrets.env_vars }}
-      run: |
-        for i in $env_vars; do
-          i=$(echo $i | sed 's/=.*//g')=$(echo ${i#*=} | base64 -di | base64 -di)
-          echo ::add-mask::${i#*=}
-          printf '%s\n' "$i" >> $GITHUB_ENV
-        done
 
-    - name: Test env vars
+    - name: Decode environment variables for tests
+      env:
+        ENV_VARS: "${{ inputs.ENV_VARS }}"
       run: |
-       echo $AZURE_CLIENT_ID
+        echo "$TEST_ENV_VARS" | base64 -d >> $GITHUB_ENV
+
+    - name: Just testing if the env vars got here
+      run: |
+        [[ "$AZURE_CLIENT_ID" == "hello" ]] && echo "hello"
+        [[ "$AZURE_CLIENT_SECRET" == "world" ]] && echo "world"
+        [[ "$AZURE_TENANT_ID" == "bye" ]] && echo "bye"
+
 
     - name: Setup Vault
       if: ${{ inputs.setup-vault }}
