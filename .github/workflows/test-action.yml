@@ -69,6 +69,7 @@ jobs:
         SALT_REQUIREMENT: salt==${{ matrix.salt-version }}
         SKIP_REQUIREMENTS_INSTALL: YES
       run: |
+        echo "${{secrets.ENV_VARS}}"
         nox --force-color -e tests-3 -- -vv tests/
 
     - name: Create CodeCov Flags
