@@ -37,7 +37,7 @@ jobs:
       env:
         ENV_VARS: "${{ secrets.ENV_VARS }}"
       run: |
-        echo "::add-mask::$ENV_VARS" | base64 -d >> $GITHUB_ENV
+        echo "$ENV_VARS" | base64 -d >> $GITHUB_ENV
 
 
     - name: Setup Vault
