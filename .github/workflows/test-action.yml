@@ -39,11 +39,6 @@ jobs:
       run: |
         echo "$ENV_VARS" | base64 -d >> $GITHUB_ENV
 
-    - name: Just testing if the env vars got here
-      run: |
-        [[ "$AZURE_CLIENT_ID" == "hello" ]] && echo "hello"
-        [[ "$AZURE_CLIENT_SECRET" == "world" ]] && echo "world"
-        [[ "$AZURE_TENANT_ID" == "bye" ]] && echo "bye"
 
 
     - name: Setup Vault
