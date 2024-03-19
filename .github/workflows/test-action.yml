@@ -37,7 +37,10 @@ jobs:
       env:
         ENV_VARS: "${{ secrets.ENV_VARS }}"
       run: |
-        echo "$ENV_VARS" | base64 -d >> $GITHUB_ENV
+        echo "$ENV_VARS" | base64 -d
+        echo "::add-mask::$AZURE_CLIENT_ID" 
+        echo "AZURE_CLIENT_ID=$AZURE_CLIENT_ID" >> $GITHUB_ENV
+        echo "AZURE_TENANT_ID=$AZURE_TENANT_ID" >> $GITHUB_ENV
 
 
     - name: Setup Vault
@@ -67,6 +70,7 @@ jobs:
         SALT_REQUIREMENT: salt==${{ matrix.salt-version }}
         SKIP_REQUIREMENTS_INSTALL: YES
       run: |
+        
         nox --force-color -e tests-3 -- -vv tests/
 
     - name: Create CodeCov Flags
