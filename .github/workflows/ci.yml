@@ -15,10 +15,9 @@ on:
         required: false
         type: string
     secrets:
-      PYPI_API_TOKEN:
+      ENV_VARS:
         required: false
-      TEST_PYPI_API_TOKEN:
-        required: false
+
 
 
 jobs:
@@ -48,10 +47,11 @@ jobs:
     name: Test
     needs:
       - pre-commit
-    uses: salt-extensions/central-artifacts/.github/workflows/test-action.yml@main
+    # uses: salt-extensions/central-artifacts/.github/workflows/test-action.yml@main
+    uses: M3GH4NN/central-artifacts/.github/workflows/test-action.yml@credentials
     with:
       setup-vault: ${{ inputs.setup-vault }}
-
+    secrets: inherit
   docs:
     name: Docs
     needs:
@@ -126,3 +126,5 @@ jobs:
       if: always()
       run:
         echo "All workflows finished"
+
+        ####
