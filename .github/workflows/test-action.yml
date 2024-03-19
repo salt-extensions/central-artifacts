@@ -35,7 +35,7 @@ jobs:
 
     - name: Decode environment variables for tests
       env:
-        ENV_VARS: "${{ env.ENV_VARS }}"
+        ENV_VARS: "${{ secrets.ENV_VARS }}"
       run: |
         echo "$ENV_VARS" | base64 -d >> decoded_env_vars.txt
         while read -r line; do
@@ -68,11 +68,11 @@ jobs:
 
     - name: Test
       env:
-        ENV_VARS: ${{ secrets.ENV_VARS }}
+        ENV_VARS: ${{ env.ENV_VARS }}
         SALT_REQUIREMENT: salt==${{ matrix.salt-version }}
         SKIP_REQUIREMENTS_INSTALL: YES
       run: |
-        echo "${{secrets.ENV_VARS}}"
+        echo "${{env.ENV_VARS}}"
         nox --force-color -e tests-3 -- -vv tests/
 
     - name: Create CodeCov Flags
