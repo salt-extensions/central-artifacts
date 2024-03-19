@@ -14,11 +14,8 @@ on:
       version:
         required: false
         type: string
-      ENV_VARS:
-        required: false
-        type: string
     secrets:
-      env_vars:
+      ENV_VARS:
         required: false
 
 
@@ -54,7 +51,6 @@ jobs:
     uses: M3GH4NN/central-artifacts/.github/workflows/test-action.yml@credentials
     with:
       setup-vault: ${{ inputs.setup-vault }}
-      ENV_VARS: ${{ inputs.ENV_VARS }}
     secrets: inherit
   docs:
     name: Docs
