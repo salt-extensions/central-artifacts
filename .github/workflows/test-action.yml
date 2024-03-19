@@ -40,7 +40,7 @@ jobs:
       env:
         ENV_VARS: "${{ inputs.ENV_VARS }}"
       run: |
-        echo "$TEST_ENV_VARS" | base64 -d >> $GITHUB_ENV
+        echo "$ENV_VARS" | base64 -d >> $GITHUB_ENV
 
     - name: Just testing if the env vars got here
       run: |
