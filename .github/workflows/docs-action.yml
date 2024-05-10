@@ -31,6 +31,12 @@ jobs:
       run: |
         nox --force-color -e docs
 
+    - name: Upload built docs as artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: html-docs
+        path: docs/_build/html
+
     - name: Set Exit Status
       if: always()
       run: |
