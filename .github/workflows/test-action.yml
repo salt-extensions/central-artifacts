@@ -29,6 +29,8 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
+      with:
+        fetch-depth: 2  # coverage: Issue detecting commit SHA
 
     - name: Setup Vault
       if: ${{ inputs.setup-vault }}
@@ -55,7 +57,7 @@ jobs:
     - name: Test
       env:
         SALT_REQUIREMENT: salt==${{ matrix.salt-version }}
-        SKIP_REQUIREMENTS_INSTALL: YES
+        SKIP_REQUIREMENTS_INSTALL: true
       run: |
         nox --force-color -e tests-3 -- -vv tests/
 
@@ -67,6 +69,7 @@ jobs:
 
     - name: Upload Project Code Coverage
       if: always()
+      continue-on-error: true
       shell: bash
       env:
         CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
@@ -99,6 +102,7 @@ jobs:
 
     - name: Upload Tests Code Coverage
       if: always()
+      continue-on-error: true
       shell: bash
       env:
         CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
@@ -167,6 +171,8 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
+      with:
+        fetch-depth: 2
 
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v4
@@ -201,7 +207,7 @@ jobs:
       shell: bash
       env:
         SALT_REQUIREMENT: salt==${{ matrix.salt-version }}
-        SKIP_REQUIREMENTS_INSTALL: YES
+        SKIP_REQUIREMENTS_INSTALL: true
       run: |
         export PATH="/C/Program Files (x86)/Windows Kits/10/bin/10.0.18362.0/x64;$PATH"
         nox --force-color -e tests-3 -- -vv tests/
@@ -214,6 +220,7 @@ jobs:
 
     - name: Upload Project Code Coverage
       if: always()
+      continue-on-error: true
       shell: bash
       env:
         CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
@@ -246,6 +253,7 @@ jobs:
 
     - name: Upload Tests Code Coverage
       if: always()
+      continue-on-error: true
       shell: bash
       env:
         CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
@@ -313,6 +321,8 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
+      with:
+        fetch-depth: 2
 
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v4
@@ -333,7 +343,7 @@ jobs:
     - name: Test
       env:
         SALT_REQUIREMENT: salt==${{ matrix.salt-version }}
-        SKIP_REQUIREMENTS_INSTALL: YES
+        SKIP_REQUIREMENTS_INSTALL: true
       run: |
         nox --force-color -e tests-3 -- -vv tests/
 
@@ -345,6 +355,7 @@ jobs:
 
     - name: Upload Project Code Coverage
       if: always()
+      continue-on-error: true
       shell: bash
       env:
         CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
@@ -377,6 +388,7 @@ jobs:
 
     - name: Upload Tests Code Coverage
       if: always()
+      continue-on-error: true
       shell: bash
       env:
         CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
