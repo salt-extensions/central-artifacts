@@ -34,12 +34,12 @@ jobs:
 
     - name: Setup Vault
       if: ${{ inputs.setup-vault }}
-      uses: eLco/setup-vault@v1.0.2
+      uses: eLco/setup-vault@v1.0.3
       with:
         vault_version: 1.15.4
 
     - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v5
       with:
         python-version: ${{ matrix.python-version }}
 
@@ -175,7 +175,7 @@ jobs:
         fetch-depth: 2
 
     - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v5
       with:
         python-version: ${{ matrix.python-version }}
 
@@ -325,7 +325,7 @@ jobs:
         fetch-depth: 2
 
     - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v5
       with:
         python-version: ${{ matrix.python-version }}
 
