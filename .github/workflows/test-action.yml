@@ -18,26 +18,28 @@ jobs:
       max-parallel: 5
       matrix:
         python-version:
-          - '3.8'
           - '3.9'
+          - '3.10'
         salt-version:
-          - '3005.4'
-          - '3006.4'
+          - '3006.8'
+          - '3007.1'
         include:
-          - python-version: '3.10'
-            salt-version: '3006.4'
+          - python-version: '3.8'
+            salt-version: '3006.8'
 
     steps:
     - uses: actions/checkout@v4
+      with:
+        fetch-depth: 2  # coverage: Issue detecting commit SHA
 
     - name: Setup Vault
       if: ${{ inputs.setup-vault }}
-      uses: eLco/setup-vault@v1.0.2
+      uses: eLco/setup-vault@v1.0.3
       with:
         vault_version: 1.15.4
 
     - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v5
       with:
         python-version: ${{ matrix.python-version }}
 
@@ -55,7 +57,7 @@ jobs:
     - name: Test
       env:
         SALT_REQUIREMENT: salt==${{ matrix.salt-version }}
-        SKIP_REQUIREMENTS_INSTALL: YES
+        SKIP_REQUIREMENTS_INSTALL: true
       run: |
         nox --force-color -e tests-3 -- -vv tests/
 
@@ -67,6 +69,7 @@ jobs:
 
     - name: Upload Project Code Coverage
       if: always()
+      continue-on-error: true
       shell: bash
       env:
         CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
@@ -99,6 +102,7 @@ jobs:
 
     - name: Upload Tests Code Coverage
       if: always()
+      continue-on-error: true
       shell: bash
       env:
         CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
@@ -131,7 +135,7 @@ jobs:
 
     - name: Upload Logs
       if: always()
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: runtests-${{ runner.os }}-py${{ matrix.python-version }}-Salt${{ matrix.salt-version }}.log
         path: artifacts/runtests-*.log
@@ -144,9 +148,9 @@ jobs:
 
     - name: Upload Exit Status
       if: always()
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
-        name: exitstatus
+        name: exitstatus-${{ github.job }}-Py{{ matrix.python-version }}-Salt{{ matrix.salt-version }}
         path: exitstatus
         if-no-files-found: error
 
@@ -161,15 +165,17 @@ jobs:
       matrix:
         include:
           - python-version: '3.8'
-            salt-version: '3005.4'
+            salt-version: '3006.8'
           - python-version: '3.8'
-            salt-version: '3006.4'
+            salt-version: '3007.1'
 
     steps:
     - uses: actions/checkout@v4
+      with:
+        fetch-depth: 2
 
     - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v5
       with:
         python-version: ${{ matrix.python-version }}
 
@@ -201,7 +207,7 @@ jobs:
       shell: bash
       env:
         SALT_REQUIREMENT: salt==${{ matrix.salt-version }}
-        SKIP_REQUIREMENTS_INSTALL: YES
+        SKIP_REQUIREMENTS_INSTALL: true
       run: |
         export PATH="/C/Program Files (x86)/Windows Kits/10/bin/10.0.18362.0/x64;$PATH"
         nox --force-color -e tests-3 -- -vv tests/
@@ -214,6 +220,7 @@ jobs:
 
     - name: Upload Project Code Coverage
       if: always()
+      continue-on-error: true
       shell: bash
       env:
         CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
@@ -246,6 +253,7 @@ jobs:
 
     - name: Upload Tests Code Coverage
       if: always()
+      continue-on-error: true
       shell: bash
       env:
         CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
@@ -278,7 +286,7 @@ jobs:
 
     - name: Upload Logs
       if: always()
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: runtests-${{ runner.os }}-py${{ matrix.python-version }}-Salt${{ matrix.salt-version }}.log
         path: artifacts/runtests-*.log
@@ -291,9 +299,9 @@ jobs:
 
     - name: Upload Exit Status
       if: always()
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
-        name: exitstatus
+        name: exitstatus-${{ github.job }}-Py{{ matrix.python-version }}-Salt{{ matrix.salt-version }}
         path: exitstatus
         if-no-files-found: error
 
@@ -307,15 +315,17 @@ jobs:
       matrix:
         include:
           - python-version: '3.9'
-            salt-version: '3005.4'
+            salt-version: '3006.8'
           - python-version: '3.10'
-            salt-version: '3006.4'
+            salt-version: '3007.1'
 
     steps:
     - uses: actions/checkout@v4
+      with:
+        fetch-depth: 2
 
     - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v5
       with:
         python-version: ${{ matrix.python-version }}
 
@@ -333,7 +343,7 @@ jobs:
     - name: Test
       env:
         SALT_REQUIREMENT: salt==${{ matrix.salt-version }}
-        SKIP_REQUIREMENTS_INSTALL: YES
+        SKIP_REQUIREMENTS_INSTALL: true
       run: |
         nox --force-color -e tests-3 -- -vv tests/
 
@@ -345,6 +355,7 @@ jobs:
 
     - name: Upload Project Code Coverage
       if: always()
+      continue-on-error: true
       shell: bash
       env:
         CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
@@ -377,6 +388,7 @@ jobs:
 
     - name: Upload Tests Code Coverage
       if: always()
+      continue-on-error: true
       shell: bash
       env:
         CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
@@ -409,7 +421,7 @@ jobs:
 
     - name: Upload Logs
       if: always()
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: runtests-${{ runner.os }}-py${{ matrix.python-version }}-Salt${{ matrix.salt-version }}.log
         path: artifacts/runtests-*.log
@@ -422,8 +434,8 @@ jobs:
 
     - name: Upload Exit Status
       if: always()
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
-        name: exitstatus
+        name: exitstatus-${{ github.job }}-Py{{ matrix.python-version }}-Salt{{ matrix.salt-version }}
         path: exitstatus
         if-no-files-found: error
