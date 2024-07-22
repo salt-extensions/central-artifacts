@@ -7,6 +7,9 @@ on:
         required: false
         type: boolean
         default: false
+    secrets:
+      ENV_VARS:
+        required: false
 
 jobs:
   Linux:
@@ -29,6 +32,13 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
+
+    - name: Decode environment variables for tests
+      env:
+        ENV_VARS: "${{ secrets.ENV_VARS }}"
+      run: |
+        echo "$ENV_VARS" | base64 -d >> $GITHUB_ENV
+
 
     - name: Setup Vault
       if: ${{ inputs.setup-vault }}
@@ -57,6 +67,7 @@ jobs:
         SALT_REQUIREMENT: salt==${{ matrix.salt-version }}
         SKIP_REQUIREMENTS_INSTALL: YES
       run: |
+        
         nox --force-color -e tests-3 -- -vv tests/
 
     - name: Create CodeCov Flags
