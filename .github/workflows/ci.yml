@@ -11,6 +11,10 @@ on:
         required: false
         type: boolean
         default: false
+      tests-timeout:
+        required: false
+        type: number
+        default: 40
       version:
         required: false
         type: string
@@ -51,6 +55,7 @@ jobs:
     uses: salt-extensions/central-artifacts/.github/workflows/test-action.yml@main
     with:
       setup-vault: ${{ inputs.setup-vault }}
+      tests-timeout: ${{ inputs.tests-timeout }}
 
   docs:
     name: Docs

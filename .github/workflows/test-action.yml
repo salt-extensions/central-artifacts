@@ -7,11 +7,15 @@ on:
         required: false
         type: boolean
         default: false
+      tests-timeout:
+        required: false
+        type: number
+        default: 40
 
 jobs:
   Linux:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: ${{ inputs.tests-timeout }}
 
     strategy:
       fail-fast: false
@@ -157,7 +161,7 @@ jobs:
 
   Windows:
     runs-on: windows-latest
-    timeout-minutes: 40
+    timeout-minutes: ${{ inputs.tests-timeout }}
 
     strategy:
       fail-fast: false
@@ -307,7 +311,7 @@ jobs:
 
   macOS:
     runs-on: macOS-latest
-    timeout-minutes: 40
+    timeout-minutes: ${{ inputs.tests-timeout }}
 
     strategy:
       fail-fast: false
