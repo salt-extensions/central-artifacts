@@ -79,6 +79,7 @@ jobs:
       }}
     needs:
       - docs
+      - test
 
   build-python-package:
     name: Python Package
