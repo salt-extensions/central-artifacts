@@ -3,6 +3,10 @@ name: CI
 on:
   workflow_call:
     inputs:
+      deploy-docs:
+        required: false
+        type: boolean
+        default: false
       setup-vault:
         required: false
         type: boolean
@@ -62,6 +66,20 @@ jobs:
     needs:
       - pre-commit
     uses: salt-extensions/central-artifacts/.github/workflows/docs-action.yml@main
+
+  deploy-docs:
+    name: Deploy Docs
+    uses: salt-extensions/central-artifacts/.github/workflows/deploy-docs-action.yml@main
+    # Only build doc deployments from the main branch of the org repo and never for PRs.
+    if: >
+      ${{ inputs.deploy-docs &&
+          github.repository_owner == 'salt-extensions' &&
+          github.ref == 'refs/heads/main' &&
+          github.event_name != 'pull_request'
+      }}
+    needs:
+      - docs
+      - test
 
   build-python-package:
     name: Python Package
