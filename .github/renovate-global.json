@@ -14,7 +14,7 @@
     "allowScripts": true,
     "ignoreScripts": false,
     "autodiscover": true,
-    "platformCommit": true,
+    "platformCommit": "enabled",
     "constraints":
     {
         "copier": ">=9.3",
