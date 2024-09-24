@@ -1,0 +1,23 @@
+{
+    "extends":
+    [
+        "customManagers:githubActionsVersions"
+    ],
+    "platform": "github",
+    "onboarding": false,
+    "requireConfig": "ignored",
+    "enabledManagers":
+    [
+        "copier",
+        "custom.regex"
+    ],
+    "allowScripts": true,
+    "ignoreScripts": false,
+    "autodiscover": true,
+    "platformCommit": true,
+    "constraints":
+    {
+        "copier": ">=9.3",
+        "python": "3.10"
+    }
+}
