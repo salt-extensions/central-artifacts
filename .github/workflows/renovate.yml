@@ -4,6 +4,11 @@ name: Update Copier template
 on:
   workflow_dispatch:
     inputs:
+      debug:
+        description: Increase RenovateBot log level to debug.
+        required: false
+        default: false
+        type: boolean
       repoFilter:
         description: >
           Filter the repositories Renovate runs against.
@@ -41,4 +46,5 @@ jobs:
           renovate-version: ${{ env.RENOVATE_VERSION }}
           token: ${{ steps.app-token.outputs.token }}
         env:
+          LOG_LEVEL: ${{ (github.event_name == 'workflow_dispatch' && inputs.debug) && 'debug' || 'info' }}
           RENOVATE_AUTODISCOVER_FILTER: ${{ github.event_name == 'workflow_dispatch' && inputs.repoFilter || 'salt-extensions/*' }}
