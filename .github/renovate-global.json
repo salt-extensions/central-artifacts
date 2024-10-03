@@ -31,6 +31,15 @@
                 "/https:\\/\\/github.com\\/(salt-extensions|lkubb)\\/salt-extension-copier/"
             ],
             "enabled": true
+        },
+        {
+            "matchPackageNames": ["renovate"],
+            "schedule": ["before 7am on Monday"]
+        },
+        {
+            "matchPackageNames": ["renovate"],
+            "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
+            "automerge": true
         }
     ]
 }
