@@ -19,5 +19,18 @@
     {
         "copier": ">=9.3",
         "python": "3.10.15"
-    }
+    },
+    "packageRules": [
+        {
+            "matchManagers": ["copier"],
+            "enabled": false
+        },
+        {
+            "matchManagers": ["copier"],
+            "matchPackageNames": [
+                "/https:\\/\\/github.com\\/(salt-extensions|lkubb)\\/salt-extension-copier/"
+            ],
+            "enabled": true
+        }
+    ]
 }
