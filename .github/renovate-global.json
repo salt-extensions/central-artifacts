@@ -33,11 +33,11 @@
             "enabled": true
         },
         {
-            "matchPackageNames": ["renovate"],
+            "matchPackageNames": ["ghcr.io/renovatebot/renovate"],
             "schedule": ["before 7am on Monday"]
         },
         {
-            "matchPackageNames": ["renovate"],
+            "matchPackageNames": ["ghcr.io/renovatebot/renovate"],
             "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
             "automerge": true
         }
