@@ -41,5 +41,11 @@
             "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
             "automerge": true
         }
+    ],
+    "repositories": [
+        {
+            "repository": "salt-extensions/salt-extension-copier",
+            "requireConfig": "optional"
+        }
     ]
 }
