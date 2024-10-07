@@ -1,5 +1,5 @@
 ---
-name: Update Copier template
+name: RenovateBot
 
 on:
   workflow_dispatch:
@@ -18,7 +18,7 @@ on:
         default: 'salt-extensions/*'
         type: string
   schedule:
-    - cron: '23 4 * * *'
+    - cron: '23 * * * *'
 
 env:
   # renovate: datasource=docker depName=renovate packageName=ghcr.io/renovatebot/renovate
@@ -26,21 +26,22 @@ env:
 
 jobs:
   renovate:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
+
     steps:
       - name: Get token
         id: app-token
-        uses: actions/create-github-app-token@v1
+        uses: actions/create-github-app-token@5d869da34e18e7287c1daad50e0b8ea0f506ce69  # v1.11.0
         with:
           app-id: ${{ secrets.GHA_RENOVATE_APP_ID }}
           private-key: ${{ secrets.GHA_RENOVATE_PK }}
           owner: ${{ github.repository_owner }}
 
       - name: Checkout
-        uses: actions/checkout@v4.1.7
+        uses: actions/checkout@d632683dd7b4114ad314bca15554477dd762a938  # v4.2.0
 
       - name: Self-hosted Renovate
-        uses: renovatebot/github-action@v40.2.10
+        uses: renovatebot/github-action@a1ed1d0adddfdf138192d1fbe3150a80094dee6a  # v40.3.1
         with:
           configurationFile: .github/renovate-global.json
           renovate-version: ${{ env.RENOVATE_VERSION }}

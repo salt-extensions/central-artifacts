@@ -1,8 +1,4 @@
 {
-    "extends":
-    [
-        "customManagers:githubActionsVersions"
-    ],
     "platform": "github",
     "onboarding": false,
     "requireConfig": "ignored",
@@ -31,20 +27,15 @@
                 "/https:\\/\\/github.com\\/(salt-extensions|lkubb)\\/salt-extension-copier/"
             ],
             "enabled": true
-        },
-        {
-            "matchPackageNames": ["ghcr.io/renovatebot/renovate"],
-            "schedule": ["before 7am on Monday"]
-        },
-        {
-            "matchPackageNames": ["ghcr.io/renovatebot/renovate"],
-            "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
-            "automerge": true
         }
     ],
     "repositories": [
         {
             "repository": "salt-extensions/salt-extension-copier",
+            "requireConfig": "optional"
+        },
+        {
+            "repository": "salt-extensions/central-artifacts",
             "requireConfig": "optional"
         }
     ]

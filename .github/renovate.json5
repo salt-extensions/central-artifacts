@@ -1,0 +1,24 @@
+{
+    "extends": [
+        "customManagers:githubActionsVersions",
+        "helpers:pinGitHubActionDigests",
+    ],
+    "enabledManagers": [
+        "custom.regex",
+        "github-actions",
+    ],
+    "github-actions": {
+        // Don't update the centralized workflows, they are on their way out
+        "ignorePaths": ["!.github/workflows/renovate.yml"],
+    },
+    "packageRules": [
+        {
+            "matchPackageNames": ["*"],
+            "schedule": ["before 7am on Monday"],
+        },
+        {
+            "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
+            "automerge": true,
+        },
+    ],
+}
