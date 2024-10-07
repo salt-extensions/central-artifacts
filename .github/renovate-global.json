@@ -7,8 +7,6 @@
         "copier",
         "custom.regex"
     ],
-    "allowScripts": true,
-    "ignoreScripts": false,
     "autodiscover": true,
     "platformCommit": "enabled",
     "constraints":
@@ -26,7 +24,9 @@
             "matchPackageNames": [
                 "/https:\\/\\/github.com\\/(salt-extensions|lkubb)\\/salt-extension-copier/"
             ],
-            "enabled": true
+            "enabled": true,
+            "allowScripts": true,
+            "ignoreScripts": false
         }
     ],
     "repositories": [
