@@ -16,6 +16,7 @@
         "copier": ">=9.3",
         "python": "3.10.15"
     },
+    "schedule": "before 4am",
     "packageRules": [
         {
             "matchManagers": ["copier"],
