@@ -18,6 +18,7 @@
         },
         {
             "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
+            "groupName": "Non-major dependency updates",
             "automerge": true,
         },
     ],
