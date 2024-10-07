@@ -1,4 +1,7 @@
 {
+    "extends": [
+        "customManagers:githubActionsVersions"
+    ],
     "platform": "github",
     "onboarding": false,
     "requireConfig": "ignored",
@@ -17,6 +20,28 @@
         "python": "3.10.15"
     },
     "schedule": ["before 4am"],
+    "customManagers": [
+        {
+            "customType": "regex",
+            "fileMatch": ["^\\.github/workflows/[^/]+.ya?ml$"],
+            "matchStrings": [
+                "# renovate: datasource=(?<datasource>git.*-tags) depName=(?<depName>[^\\s]+?)(?: depType=(?<depType>[^\\s]+?))?(?: (?:lookupName|packageName)=(?<packageName>[^\\s]+?))?(?: versioning=(?<versioning>[^\\s]+?))?(?: extractVersion=(?<extractVersion>[^\\s]+?))?\\s+[A-Za-z0-9_/-]+?\\s*:\\s*[\"']?(?<currentDigest>[a-f0-9]+?)\\s+#\\s*(?<currentValue>v?[0-9.]+?)[\"']?\\s",
+                "# renovate: datasource=(?<datasource>docker) depName=(?<depName>[^\\s]+?)(?: depType=(?<depType>[^\\s]+?))?(?: (?:lookupName|packageName)=(?<packageName>[^\\s]+?))?(?: versioning=(?<versioning>[^\\s]+?))?(?: extractVersion=(?<extractVersion>[^\\s]+?))?\\s+[A-Za-z0-9_/-]+?\\s*:\\s*[\"']?([^:\\s]+:)?(?<currentValue>.+?)@(?<currentDigest>sha256:[a-f0-9]+?)[\"']?\\s",
+                "# renovate: datasource=(?<datasource>[a-z-.]+?) depName=(?<depName>[^\\s]+?)(?: depType=(?<depType>[^\\s]+?))?(?: (?:lookupName|packageName)=(?<packageName>[^\\s]+?))?(?: versioning=(?<versioning>[^\\s]+?))?(?: extractVersion=(?<extractVersion>[^\\s]+?))?\\s+[A-Za-z0-9_/-]+?\\s*:\\s*[\"']?(?<currentValue>v?[0-9.]+?)[\"']?\\s"
+            ]
+        },
+        {
+            "customType": "regex",
+            "fileMatch": ["^\\.github/workflows/[^/]+.ya?ml$"],
+            "matchStrings": [
+                "# renovate:(?: versioning=(?<versioning>[^\\s]+?))?(?: extractVersion=(?<extractVersion>[^\\s]+?))?\\s+uses:\\s*[\"']?(?<depName>[^\\s]+?)@(?<currentDigest>[a-f0-9]+?)\\s+#\\s*(?<currentValue>v?[0-9.]+?)[\"']?\\s",
+                "# renovate:(?: versioning=(?<versioning>[^\\s]+?))?(?: extractVersion=(?<extractVersion>[^\\s]+?))?\\s+uses:\\s*[\"']?(?<depName>[^\\s]+?)@(?<currentValue>v?[0-9.]+?)[\"']?\\s"
+            ],
+            "datasourceTemplate": "git-tags",
+            "depNameTemplate": "https://github.com/{{{depName}}}",
+            "depTypeTemplate": "action"
+        }
+    ],
     "packageRules": [
         {
             "matchManagers": ["copier"],
@@ -28,6 +53,13 @@
                 "/https:\\/\\/github.com\\/(salt-extensions|lkubb)\\/salt-extension-copier/"
             ],
             "enabled": true
+        },
+        {
+            "matchManagers": ["regex"],
+            "matchFileNames": [".github/workflows/*.ya?ml"],
+            "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
+            "groupName": "Non-major CI dependency updates",
+            "automerge": true
         }
     ],
     "repositories": [

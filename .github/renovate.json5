@@ -1,6 +1,5 @@
 {
     "extends": [
-        "customManagers:githubActionsVersions",
         "helpers:pinGitHubActionDigests",
     ],
     "enabledManagers": [
