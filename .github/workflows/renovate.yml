@@ -22,7 +22,7 @@ on:
 
 env:
   # renovate: datasource=docker depName=renovate packageName=ghcr.io/renovatebot/renovate
-  RENOVATE_VERSION: 39.164.1
+  RENOVATE_VERSION: 39.171.2
 
 jobs:
   renovate:
@@ -31,7 +31,7 @@ jobs:
     steps:
       - name: Get token
         id: app-token
-        uses: actions/create-github-app-token@67e27a7eb7db372a1c61a7f9bdab8699e9ee57f7  # v1.11.3
+        uses: actions/create-github-app-token@0d564482f06ca65fa9e77e2510873638c82206f2  # v1.11.5
         with:
           app-id: ${{ secrets.GHA_RENOVATE_APP_ID }}
           private-key: ${{ secrets.GHA_RENOVATE_PK }}
