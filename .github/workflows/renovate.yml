@@ -9,6 +9,11 @@ on:
         required: false
         default: false
         type: boolean
+      ignoreSchedule:
+        description: Ignore the configured schedule (create PRs immediately).
+        required: false
+        default: false
+        type: boolean
       repoFilter:
         description: >
           Filter the repositories Renovate runs against.
@@ -44,8 +49,12 @@ jobs:
         uses: renovatebot/github-action@02f4fdeb479bbb229caa7ad82cb5e691c07e80b3 # v41.0.14
         with:
           configurationFile: .github/renovate-global.json
+          docker-cmd-file: .github/renovate-entrypoint.sh
+          envRegex: >-
+            /^(?:RENOVATE_\w+|LOG_LEVEL|GITHUB_COM_TOKEN|NODE_OPTIONS|(?:HTTPS?|NO)_PROXY|(?:https?|no)_proxy|IGNORE_SCHEDULE)$/
           renovate-version: ${{ env.RENOVATE_VERSION }}
           token: ${{ steps.app-token.outputs.token }}
         env:
           LOG_LEVEL: ${{ (github.event_name == 'workflow_dispatch' && inputs.debug) && 'debug' || 'info' }}
           RENOVATE_AUTODISCOVER_FILTER: ${{ github.event_name == 'workflow_dispatch' && inputs.repoFilter || 'salt-extensions/*' }}
+          IGNORE_SCHEDULE: ${{ inputs.ignoreSchedule && 'true' || '' }}
