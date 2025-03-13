@@ -16,7 +16,7 @@
     "platformCommit": "enabled",
     "constraints":
     {
-        "copier": ">=9.3 || <9.5",
+        "copier": ">=9.6",
         "python": "3.10.15"
     },
     "schedule": ["before 4am"],
