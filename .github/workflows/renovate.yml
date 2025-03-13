@@ -50,7 +50,7 @@ jobs:
         with:
           configurationFile: .github/renovate-global.json
           docker-cmd-file: .github/renovate-entrypoint.sh
-          envRegex: >-
+          env-regex: >-
             /^(?:RENOVATE_\w+|LOG_LEVEL|GITHUB_COM_TOKEN|NODE_OPTIONS|(?:HTTPS?|NO)_PROXY|(?:https?|no)_proxy|IGNORE_SCHEDULE)$/
           renovate-version: ${{ env.RENOVATE_VERSION }}
           token: ${{ steps.app-token.outputs.token }}
