@@ -57,4 +57,4 @@ jobs:
         env:
           LOG_LEVEL: ${{ (github.event_name == 'workflow_dispatch' && inputs.debug) && 'debug' || 'info' }}
           RENOVATE_AUTODISCOVER_FILTER: ${{ github.event_name == 'workflow_dispatch' && inputs.repoFilter || 'salt-extensions/*' }}
-          IGNORE_SCHEDULE: ${{ inputs.ignoreSchedule && 'true' || '' }}
+          IGNORE_SCHEDULE: ${{ inputs.ignoreSchedule && '1' || '' }}
