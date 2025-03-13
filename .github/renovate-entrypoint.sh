@@ -11,4 +11,4 @@ else
     echo "Using schedule"
 fi
 
-exec renovate $args
+runuser -u ubuntu -- renovate $args
