@@ -27,7 +27,7 @@ on:
 
 env:
   # renovate: datasource=docker depName=renovate packageName=ghcr.io/renovatebot/renovate
-  RENOVATE_VERSION: 39.222.3
+  RENOVATE_VERSION: 39.233.5
 
 jobs:
   renovate:
