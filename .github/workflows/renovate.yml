@@ -27,7 +27,7 @@ on:
 
 env:
   # renovate: datasource=docker depName=renovate packageName=ghcr.io/renovatebot/renovate
-  RENOVATE_VERSION: 41.113.5
+  RENOVATE_VERSION: 41.122.3
 
 jobs:
   renovate:
@@ -46,7 +46,7 @@ jobs:
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
 
       - name: Self-hosted Renovate
-        uses: renovatebot/github-action@f8af9272cd94a4637c29f60dea8731afd3134473 # v43.0.12
+        uses: renovatebot/github-action@9ba84f1ade243f8c2ce5b223df61cf23dc094584 # v43.0.13
         with:
           configurationFile: .github/renovate-global.json
           docker-cmd-file: .github/renovate-entrypoint.sh
