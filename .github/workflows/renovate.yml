@@ -27,7 +27,7 @@ on:
 
 env:
   # renovate: datasource=docker depName=renovate packageName=ghcr.io/renovatebot/renovate
-  RENOVATE_VERSION: 43.59.4
+  RENOVATE_VERSION: 43.76.2
 
 jobs:
   renovate:
@@ -36,7 +36,7 @@ jobs:
     steps:
       - name: Get token
         id: app-token
-        uses: actions/create-github-app-token@29824e69f54612133e76f7eaac726eef6c875baf  # v2.2.1
+        uses: actions/create-github-app-token@fee1f7d63c2ff003460e3d139729b119787bc349  # v2.2.2
         with:
           app-id: ${{ secrets.GHA_RENOVATE_APP_ID }}
           private-key: ${{ secrets.GHA_RENOVATE_PK }}
@@ -46,7 +46,7 @@ jobs:
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
       - name: Self-hosted Renovate
-        uses: renovatebot/github-action@0b17c4eb901eca44d018fb25744a50a74b2042df # v46.1.4
+        uses: renovatebot/github-action@abd08c7549b2a864af5df4a2e369c43f035a6a9d # v46.1.5
         with:
           configurationFile: .github/renovate-global.json
           docker-cmd-file: .github/renovate-entrypoint.sh
