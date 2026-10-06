@@ -31,14 +31,14 @@ env:
 
 jobs:
   renovate:
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
 
     steps:
       - name: Get token
         id: app-token
         uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1  # v3.2.0
         with:
-          app-id: ${{ secrets.GHA_RENOVATE_APP_ID }}
+          client-id: ${{ secrets.GHA_RENOVATE_CLID }}
           private-key: ${{ secrets.GHA_RENOVATE_PK }}
           owner: ${{ github.repository_owner }}
 
