@@ -166,6 +166,16 @@
             groupName: "GitHub Actions digest update",
             automerge: false,
         },
+        {
+            matchDatasources: ["git-tags"],
+            matchPackageNames: [
+                "https://github.com/renovatebot/pre-commit-hooks",
+            ],
+            // Pin renovate-config-validator to the version we're actually running.
+            // This needs to be kept in sync, see below in repositories.
+            // renovate: validator-hook
+            allowedVersions: "44.138.0",
+        },
     ],
     repositories: [
         // Select repositories can extend this configuration with a repository-scoped one
@@ -176,6 +186,28 @@
         {
             repository: "salt-extensions/central-artifacts",
             requireConfig: "optional",
+            customManagers: [
+                {
+                    customType: "regex",
+                    managerFilePatterns: ["/^\\.github/renovate-global\\.json5$/"],  // this file, see above
+                    matchStrings: [
+                        "// renovate: validator-hook\\s+allowedVersions:\\s+\"(?<currentValue>[0-9.]+)\",\\s",
+                    ],
+                    datasourceTemplate: "docker",
+                    packageNameTemplate: "renovate/renovate",
+                    depTypeTemplate: "renovate",
+                },
+            ],
+            packageRules: [
+                {
+                    matchPackageNames: [
+                        "renovate/renovate",
+                        "https://github.com/renovatebot/pre-commit-hooks",
+                    ],
+                    groupName: "Renovate",
+                    allowedVersions: null,
+                },
+            ],
         },
     ]
 }
