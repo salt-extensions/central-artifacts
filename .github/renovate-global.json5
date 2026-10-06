@@ -44,7 +44,8 @@
               "# renovate:(?: depName=(?<depName>[^\\s]+?))?(?: depType=(?<depType>[^\\s]+?))?\\s+-\\s+repo:\\s+(?<packageName>[^\\s]+?)\\s+rev:\\s+(?<currentDigest>[a-f0-9]+?)\\s+#\\s+(?<currentValue>v?[0-9.]+?)\\s",
             ],
             datasourceTemplate: "git-tags",
-            depTypeTemplate: "hook",
+            // Note: A template always takes precedence over a capture group, so default via Handlebars.
+            depTypeTemplate: "{{#if depType}}{{{depType}}}{{else}}hook{{/if}}",
         },
         {
             // Manager for .pre-commit-config.yml dependency pinning, defaulting to Python (pypi datasource) and depType to dev:
@@ -57,10 +58,10 @@
             customType: "regex",
             managerFilePatterns: ["/^\\.pre-commit-config\\.ya?ml$/"],
             matchStrings: [
-              "# renovate:(?: datasource=(?<datasource>[a-z-.]+?))?(?: depName=(?<depName>[^\\s]+?))?(?: depType=(?<depType>[^\\s]+?))?\\s+-\\s+[\"']?(?<packageName>[^\\s]+?)\\s*==\\s*(?<currentValue>[0-9.]+?)[^\\n]*[\"']?\\s",
+              "# renovate:(?: datasource=(?<datasource>[a-z-.]+?))?(?: depName=(?<depName>[^\\s]+?))?(?: depType=(?<depType>[^\\s]+?))?\\s+-\\s+[\"']?(?<packageName>[^\\s]+?)\\s*==\\s*(?<currentValue>[0-9]+(?:\\.[0-9]+)*)[^\\n]*[\"']?\\s",
             ],
-            datasourceTemplate: "pypi",
-            depTypeTemplate: "dev",
+            datasourceTemplate: "{{#if datasource}}{{{datasource}}}{{else}}pypi{{/if}}",
+            depTypeTemplate: "{{#if depType}}{{{depType}}}{{else}}dev{{/if}}",
         },
         {   // General manager for YAML files. Defaults depType to dev.
             customType: "regex",
@@ -73,6 +74,7 @@
                 // Git-tag dependency pinned by commit SHA:
                 // # renovate: datasource=git-tags (or github-tags etc.) depName=... (lookupName/packageName=...) (versioning=...) (extractVersion=...) (depType=...)
                 // foobar: cafebabe...  # v1.2.3
+                // foobar: 'cafebabe...  # v1.2.3'
                 "# renovate: datasource=(?<datasource>git.*-tags) depName=(?<depName>[^\\s]+?)(?: (?:lookupName|packageName)=(?<packageName>[^\\s]+?))?(?: versioning=(?<versioning>[^\\s]+?))?(?: extractVersion=(?<extractVersion>[^\\s]+?))?(?: depType=(?<depType>[^\\s]+?))?\\s+[A-Za-z0-9_/-]+?\\s*:\\s*[\"']?(?<currentDigest>[a-f0-9]+?)\\s+#\\s*(?<currentValue>v?[0-9.]+?)[\"']?\\s",
                 // Docker image pinned by digest:
                 // # renovate: datasource=docker depName=... (lookupName/packageName=...) (versioning=...) (extractVersion=...) (depType=...)
@@ -83,7 +85,7 @@
                 // barbaz: v1.2.3  # or 1.2.3
                 "# renovate: datasource=(?<datasource>[a-z-.]+?) depName=(?<depName>[^\\s]+?)(?: (?:lookupName|packageName)=(?<packageName>[^\\s]+?))?(?: versioning=(?<versioning>[^\\s]+?))?(?: extractVersion=(?<extractVersion>[^\\s]+?))?(?: depType=(?<depType>[^\\s]+?))?\\s+[A-Za-z0-9_/-]+?\\s*:\\s*[\"']?(?<currentValue>v?[0-9.]+?)[\"']?\\s",
             ],
-            depTypeTemplate: "dev",
+            depTypeTemplate: "{{#if depType}}{{{depType}}}{{else}}dev{{/if}}",
         },
         {   // Manage GHA refs (`uses:`), either SHA-pinned actions with a human-readable version comment or general version refs
             // datasource defaults to git-tags and depType to action
