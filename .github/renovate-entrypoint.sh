@@ -11,4 +11,11 @@ else
     echo "Using schedule"
 fi
 
+# We allow custom venv_pyver and Copier migrations need access to that specific Python version.
+# Ensure `uv` is installed, which solves this issue.
+# TODO: Consider detecting a Renovate run in the template automation and installing `uv` on demand.
+
+# renovate:
+install-tool uv 0.12.23
+
 runuser -u ubuntu -- renovate $args

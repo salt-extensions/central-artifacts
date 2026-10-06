@@ -20,7 +20,8 @@
     constraints:
     {
         copier: ">=9.6",
-        python: "3.14.6",
+        // Don't pin the Python version. We now allow venv_pyver to be customized and that exact version is then
+        // required to perform migrations. `uv` is installed in the entrypoint and provides any version on request.
     },
     branchNameStrict: true,
     schedule: ["before 4am"],
