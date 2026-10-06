@@ -1,0 +1,180 @@
+{
+    extends: [
+        // Manages `*_VERSION` env var declarations in GH Actions YAML files:
+        // # renovate datasource=... depName=... (lookupName/packageName=...) (versioning=...) (extractVersion=...) (registryUrl=...)
+        // FOOBAR_VERSION: 1.2.3
+        "customManagers:githubActionsVersions",
+    ],
+    platform: "github",
+    onboarding: false,
+    requireConfig: "ignored",  // only allow select repositories to override our config
+    enabledManagers:
+    [
+        "copier",
+        "custom.regex",
+    ],
+    // both are required for copier to run with the --trust flag
+    allowScripts: true,
+    ignoreScripts: false,
+    autodiscover: true,
+    constraints:
+    {
+        copier: ">=9.6",
+        python: "3.14.6",
+    },
+    branchNameStrict: true,
+    schedule: ["before 4am"],
+    automergeSchedule: ["* * 1,15 * *"],
+    automergeStrategy: "squash",
+    platformAutomerge: false,
+    platformCommit: "enabled",
+    customManagers: [
+        // These managers - in addition to the *_VERSION one from `extends` above -
+        // are available on all repositories within the salt-extensions organization.
+        {
+            // Manager for .pre-commit-config.yml `repo`/`rev` SHA pinning:
+            //
+            // # renovate: (depName=...) (depType=..., default: hook)
+            // - repo: https://github.com/foo/bar
+            //   ref: cafebabe...  # v1.2.3
+            customType: "regex",
+            managerFilePatterns: ["/^\\.pre-commit-config\\.ya?ml$/"],
+            matchStrings: [
+              "# renovate:(?: depName=(?<depName>[^\\s]+?))?(?: depType=(?<depType>[^\\s]+?))?\\s+-\\s+repo:\\s+(?<packageName>[^\\s]+?)\\s+rev:\\s+(?<currentDigest>[a-f0-9]+?)\\s+#\\s+(?<currentValue>v?[0-9.]+?)\\s",
+            ],
+            datasourceTemplate: "git-tags",
+            depTypeTemplate: "hook",
+        },
+        {
+            // Manager for .pre-commit-config.yml dependency pinning, defaulting to Python (pypi datasource) and depType to dev:
+            //
+            // additional_dependencies:
+            //   # renovate: datasource=other (depName=...) (depType=...) (versioning=...)
+            //   - foobar==1.2.3
+            //   # renovate:
+            //   - barbaz==1.2.3 ; sys_platform == 'linux' or sys_platform == 'darwin' or sys_platform == 'win32'
+            customType: "regex",
+            managerFilePatterns: ["/^\\.pre-commit-config\\.ya?ml$/"],
+            matchStrings: [
+              "# renovate:(?: datasource=(?<datasource>[a-z-.]+?))?(?: depName=(?<depName>[^\\s]+?))?(?: depType=(?<depType>[^\\s]+?))?\\s+-\\s+[\"']?(?<packageName>[^\\s]+?)\\s*==\\s*(?<currentValue>[0-9.]+?)[^\\n]*[\"']?\\s",
+            ],
+            datasourceTemplate: "pypi",
+            depTypeTemplate: "dev",
+        },
+        {   // General manager for YAML files. Defaults depType to dev.
+            customType: "regex",
+            managerFilePatterns: [
+                "/^\\.github/.+\\.ya?ml$/",
+                "/^.*versions\\.ya?ml$/",
+                "/^\\.pre-commit-config\\.ya?ml$/"
+            ],
+            matchStrings: [
+                // Git-tag dependency pinned by commit SHA:
+                // # renovate: datasource=git-tags (or github-tags etc.) depName=... (lookupName/packageName=...) (versioning=...) (extractVersion=...) (depType=...)
+                // foobar: cafebabe...  # v1.2.3
+                "# renovate: datasource=(?<datasource>git.*-tags) depName=(?<depName>[^\\s]+?)(?: (?:lookupName|packageName)=(?<packageName>[^\\s]+?))?(?: versioning=(?<versioning>[^\\s]+?))?(?: extractVersion=(?<extractVersion>[^\\s]+?))?(?: depType=(?<depType>[^\\s]+?))?\\s+[A-Za-z0-9_/-]+?\\s*:\\s*[\"']?(?<currentDigest>[a-f0-9]+?)\\s+#\\s*(?<currentValue>v?[0-9.]+?)[\"']?\\s",
+                // Docker image pinned by digest:
+                // # renovate: datasource=docker depName=... (lookupName/packageName=...) (versioning=...) (extractVersion=...) (depType=...)
+                // image: foo/bar:1.2.3@sha256:cafebabe...
+                "# renovate: datasource=(?<datasource>docker) depName=(?<depName>[^\\s]+?)(?: (?:lookupName|packageName)=(?<packageName>[^\\s]+?))?(?: versioning=(?<versioning>[^\\s]+?))?(?: extractVersion=(?<extractVersion>[^\\s]+?))?(?: depType=(?<depType>[^\\s]+?))?\\s+[A-Za-z0-9_/-]+?\\s*:\\s*[\"']?([^:\\s]+:)?(?<currentValue>.+?)@(?<currentDigest>sha256:[a-f0-9]+?)[\"']?\\s",
+                // Generic versioned dependency
+                // # renovate: datasource=foobar depName=... (lookupName/packageName=...) (versioning=...) (extractVersion=...) (depType=...)
+                // barbaz: v1.2.3  # or 1.2.3
+                "# renovate: datasource=(?<datasource>[a-z-.]+?) depName=(?<depName>[^\\s]+?)(?: (?:lookupName|packageName)=(?<packageName>[^\\s]+?))?(?: versioning=(?<versioning>[^\\s]+?))?(?: extractVersion=(?<extractVersion>[^\\s]+?))?(?: depType=(?<depType>[^\\s]+?))?\\s+[A-Za-z0-9_/-]+?\\s*:\\s*[\"']?(?<currentValue>v?[0-9.]+?)[\"']?\\s",
+            ],
+            depTypeTemplate: "dev",
+        },
+        {   // Manage GHA refs (`uses:`), either SHA-pinned actions with a human-readable version comment or general version refs
+            // datasource defaults to git-tags and depType to action
+            // Intended for custom actions in generated projects, which don't have the github-actions manager (to avoid drift from the template).
+            customType: "regex",
+            managerFilePatterns: ["/^\\.github/(actions|workflows)/.+\\.ya?ml$/"],
+            matchStrings: [
+                // Pinned refs:
+                // renovate: (versioning=...) (extractVersion=...)
+                // uses: <depname>@cafebabe...  # v1.2.3
+                "# renovate:(?: versioning=(?<versioning>[^\\s]+?))?(?: extractVersion=(?<extractVersion>[^\\s]+?))?\\s+uses:\\s*[\"']?(?<depName>[^\\s]+?)@(?<currentDigest>[a-f0-9]+?)[\"']?\\s+#\\s*(?<currentValue>v?[0-9.]+?)\\s",
+                // General refs:
+                // renovate: (versioning=...) (extractVersion=...)
+                // uses: <depname>@1.2.3...  # or @v1.2.3
+                "# renovate:(?: versioning=(?<versioning>[^\\s]+?))?(?: extractVersion=(?<extractVersion>[^\\s]+?))?\\s+uses:\\s*[\"']?(?<depName>[^\\s]+?)@(?<currentValue>v?[0-9.]+?)[\"']?\\s",
+            ],
+            datasourceTemplate: "git-tags",
+            packageNameTemplate: "https://github.com/{{{depName}}}",
+            depTypeTemplate: "action",
+        },
+    ],
+    packageRules: [
+        // ensure the copier manager only works with salt-extension-copier, not other Copier templates
+        {
+            matchManagers: ["copier"],
+            enabled: false,
+        },
+        {
+            matchManagers: ["copier"],
+            matchPackageNames: [
+                "/https:\\/\\/github.com\\/(salt-extensions|lkubb)\\/salt-extension-copier/",
+                "/gh:(salt-extensions|lkubb)\\/salt-extension-copier/",
+            ],
+            enabled: true,
+        },
+        {   // Pin action/workflow refs, pre-commit hook and container image refs (container is custom)
+            matchDepTypes: ["action", "workflow", "hook", "container"],
+            matchDatasources: ["/git.*-tags/", "docker"],
+            pinDigests: true,
+        },
+        {
+            matchDepTypes: ["hook"],
+            matchUpdateTypes: ["minor", "patch"],
+            groupName: "Pre-commit Hooks (non-major)",
+            automerge: true,
+        },
+        {
+            matchDepTypes: ["hook"],
+            matchUpdateTypes: ["pin"],
+            groupName: "Pre-commit Hooks pinning",
+            automerge: true,
+        },
+        {
+            matchDepTypes: ["hook"],
+            matchUpdateTypes: ["digest"],
+            groupName: "Pre-commit Hooks digest update",
+            automerge: false,
+        },
+        {
+            matchDepTypes: ["dev"],
+            matchUpdateTypes: ["minor", "patch"],
+            groupName: "Dev Tools (non-major)",
+            automerge: true,
+        },
+        {
+            matchDepTypes: ["action", "actionMisc", "workflow"],
+            matchUpdateTypes: ["minor", "patch"],
+            groupName: "GitHub Actions (non-major)",
+            automerge: true,
+        },
+        {
+            matchDepTypes: ["action", "workflow"],
+            matchUpdateTypes: ["pin"],
+            groupName: "GitHub Actions digests pinning",
+            automerge: true,
+        },
+        {
+            matchDepTypes: ["action", "workflow"],
+            matchUpdateTypes: ["digest"],
+            groupName: "GitHub Actions digest update",
+            automerge: false,
+        },
+    ],
+    repositories: [
+        // Select repositories can extend this configuration with a repository-scoped one
+        {
+            repository: "salt-extensions/salt-extension-copier",
+            requireConfig: "optional",
+        },
+        {
+            repository: "salt-extensions/central-artifacts",
+            requireConfig: "optional",
+        },
+    ]
+}
