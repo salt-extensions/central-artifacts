@@ -15,6 +15,10 @@ fi
 # Ensure `uv` is installed, which solves this issue.
 # TODO: Consider detecting a Renovate run in the template automation and installing `uv` on demand.
 
+# required for `uv` install below
+# renovate: prebuilt
+install-tool python 3.14.8
+
 # renovate:
 install-tool uv 0.12.23
 

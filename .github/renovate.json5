@@ -4,11 +4,21 @@
         "github-actions",
     ],
     customManagers: [
+        {   // manage the python version in the entrypoint
+            customType: "regex",
+            managerFilePatterns: ["/^\\.github/renovate-entrypoint\\.sh$/"],
+            matchStrings: [
+              "# renovate: prebuilt(?: packageName=(?<packageName>[^\\s]+?))?(?: versioning=(?<versioning>[^\\s]+?))?(?: extractVersion=(?<extractVersion>[^\\s]+?))?(?: depType=(?<depType>[^\\s]+?))?\\s+install-tool\\s+(?<depName>[^\\s]+?)\\s+(?<currentValue>[0-9.]+?)\\s"
+            ],
+            datasourceTemplate: "github-releases",
+            packageNameTemplate: "containerbase/{{{depName}}}-prebuild",
+            depTypeTemplate: "dev",
+        },
         {   // manage the uv version in the entrypoint
             customType: "regex",
             managerFilePatterns: ["/^\\.github/renovate-entrypoint\\.sh$/"],
             matchStrings: [
-              "# renovate:(?: datasource=(?<datasource>[a-z-.]+?))?(?: depName=(?<depName>[^\\s]+?))(?: versioning=(?<versioning>[^\\s]+?))?(?: extractVersion=(?<extractVersion>[^\\s]+?))?(?: depType=(?<depType>[^\\s]+?))?\\s+install-tool\\s+(?<packageName>[^\\s]+?)\\s+(?<currentValue>[0-9.]+?)\\s",
+              "# renovate:(?: datasource=(?<datasource>[^\\s]+?))?(?: packageName=(?<packageName>[^\\s]+?))?(?: versioning=(?<versioning>[^\\s]+?))?(?: extractVersion=(?<extractVersion>[^\\s]+?))?(?: depType=(?<depType>[^\\s]+?))?\\s+install-tool\\s+(?<depName>[^\\s]+?)\\s+(?<currentValue>[0-9.]+?)\\s"
             ],
             datasourceTemplate: "pypi",
             depTypeTemplate: "dev",
