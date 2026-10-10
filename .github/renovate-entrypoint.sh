@@ -20,6 +20,6 @@ fi
 install-tool python 3.14.8
 
 # renovate:
-install-tool uv 0.12.23
+install-tool uv 0.13.0
 
 runuser -u ubuntu -- renovate $args
