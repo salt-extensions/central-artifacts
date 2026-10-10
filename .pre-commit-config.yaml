@@ -23,7 +23,7 @@ repos:
 
   # renovate: depName=renovate
   - repo: https://github.com/renovatebot/pre-commit-hooks
-    rev: 95bb5478d9f732658452e5bc0dfbeb986832faa9  # 44.138.0
+    rev: 32202df16e5e41bb0582ecfa41f7d1dcaf7d4d08  # 44.149.2
     hooks:
       - id: renovate-config-validator
         alias: renovate-global

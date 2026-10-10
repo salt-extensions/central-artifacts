@@ -176,7 +176,7 @@
             // Pin renovate-config-validator to the version we're actually running.
             // This needs to be kept in sync, see below in repositories.
             // renovate: validator-hook
-            allowedVersions: "44.138.0",
+            allowedVersions: "44.149.2",
         },
     ],
     repositories: [
