@@ -17,9 +17,9 @@ fi
 
 # required for `uv` install below
 # renovate: prebuilt
-install-tool python 3.14.8
+install-tool python 3.15.1
 
 # renovate:
-install-tool uv 0.12.23
+install-tool uv 0.13.5
 
 runuser -u ubuntu -- renovate $args
